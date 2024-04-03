@@ -12,7 +12,7 @@ public class CoreHttpApiHostMigrationsDbContextFactory : IDesignTimeDbContextFac
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<CoreHttpApiHostMigrationsDbContext>()
-            .UseSqlServer(configuration.GetConnectionString("Core"));
+            .UseNpgsql(configuration.GetConnectionString("Core"));
 
         return new CoreHttpApiHostMigrationsDbContext(builder.Options);
     }

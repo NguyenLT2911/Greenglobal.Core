@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenglobal.Core.HttpApi", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenglobal.Core.HttpApi.Host", "host\Greenglobal.Core.HttpApi.Host\Greenglobal.Core.HttpApi.Host.csproj", "{37B135B0-DAFE-4616-B25C-1BDF32FC44A2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Greenglobal.Core.Host.Shared", "..\..\gis-app-desktop-opensource\host\Greenglobal.Core.Host.Shared\Greenglobal.Core.Host.Shared.csproj", "{0E5D92CC-30EE-4A77-84DA-84B730DB52A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{37B135B0-DAFE-4616-B25C-1BDF32FC44A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37B135B0-DAFE-4616-B25C-1BDF32FC44A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37B135B0-DAFE-4616-B25C-1BDF32FC44A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E5D92CC-30EE-4A77-84DA-84B730DB52A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5D92CC-30EE-4A77-84DA-84B730DB52A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5D92CC-30EE-4A77-84DA-84B730DB52A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5D92CC-30EE-4A77-84DA-84B730DB52A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{0CE86223-D31D-4315-A1F5-87BA3EE1B844} = {649A3FFA-182F-4E56-9717-E6A9A2BEC545}
 		{077AA5F8-8B61-420C-A6B5-0150A66FDB34} = {649A3FFA-182F-4E56-9717-E6A9A2BEC545}
 		{37B135B0-DAFE-4616-B25C-1BDF32FC44A2} = {E400416D-2895-4512-9D17-90681EEC7E0A}
+		{0E5D92CC-30EE-4A77-84DA-84B730DB52A2} = {E400416D-2895-4512-9D17-90681EEC7E0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4324B3B4-B60B-4E3C-91D8-59576B4E26DD}
