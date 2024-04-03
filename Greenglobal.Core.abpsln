@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "Greenglobal.Core": {
+      "path": "Greenglobal.Core.abpmdl"
+    }
+  }
+}

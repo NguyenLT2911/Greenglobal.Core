@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Greenglobal.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="8.0.5" />
+    <PackageReference Include="Volo.Abp.Ddd.Application" Version="8.0.5" />
+    <ProjectReference Include="..\Greenglobal.Core.Application.Contracts\Greenglobal.Core.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Greenglobal.Core.Domain\Greenglobal.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

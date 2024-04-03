@@ -1,0 +1,111 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "Greenglobal.Core.Domain.Shared": {
+      "path": "src/Greenglobal.Core.Domain.Shared/Greenglobal.Core.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Domain": {
+      "path": "src/Greenglobal.Core.Domain/Greenglobal.Core.Domain.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Application.Contracts": {
+      "path": "src/Greenglobal.Core.Application.Contracts/Greenglobal.Core.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Application": {
+      "path": "src/Greenglobal.Core.Application/Greenglobal.Core.Application.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.EntityFrameworkCore": {
+      "path": "src/Greenglobal.Core.EntityFrameworkCore/Greenglobal.Core.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.MongoDB": {
+      "path": "src/Greenglobal.Core.MongoDB/Greenglobal.Core.MongoDB.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.HttpApi": {
+      "path": "src/Greenglobal.Core.HttpApi/Greenglobal.Core.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.HttpApi.Client": {
+      "path": "src/Greenglobal.Core.HttpApi.Client/Greenglobal.Core.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.TestBase": {
+      "path": "test/Greenglobal.Core.TestBase/Greenglobal.Core.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.EntityFrameworkCore.Tests": {
+      "path": "test/Greenglobal.Core.EntityFrameworkCore.Tests/Greenglobal.Core.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.MongoDB.Tests": {
+      "path": "test/Greenglobal.Core.MongoDB.Tests/Greenglobal.Core.MongoDB.Tests.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.Domain.Tests": {
+      "path": "test/Greenglobal.Core.Domain.Tests/Greenglobal.Core.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.Application.Tests": {
+      "path": "test/Greenglobal.Core.Application.Tests/Greenglobal.Core.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.HttpApi.Host": {
+      "path": "host/Greenglobal.Core.HttpApi.Host/Greenglobal.Core.HttpApi.Host.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.Web": {
+      "path": "src/Greenglobal.Core.Web/Greenglobal.Core.Web.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Greenglobal.Core.HttpApi.Client.ConsoleTestApp/Greenglobal.Core.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Greenglobal.Core.Web.Host": {
+      "path": "host/Greenglobal.Core.Web.Host/Greenglobal.Core.Web.Host.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.AuthServer": {
+      "path": "host/Greenglobal.Core.AuthServer/Greenglobal.Core.AuthServer.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.Host.Shared": {
+      "path": "host/Greenglobal.Core.Host.Shared/Greenglobal.Core.Host.Shared.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.Web.Unified": {
+      "path": "host/Greenglobal.Core.Web.Unified/Greenglobal.Core.Web.Unified.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.Blazor": {
+      "path": "src/Greenglobal.Core.Blazor/Greenglobal.Core.Blazor.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Blazor.Host": {
+      "path": "host/Greenglobal.Core.Blazor.Host/Greenglobal.Core.Blazor.Host.abppkg",
+      "folder": "host"
+    },
+    "Greenglobal.Core.Blazor.Server": {
+      "path": "src/Greenglobal.Core.Blazor.Server/Greenglobal.Core.Blazor.Server.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Blazor.WebAssembly": {
+      "path": "src/Greenglobal.Core.Blazor.WebAssembly/Greenglobal.Core.Blazor.WebAssembly.abppkg",
+      "folder": "src"
+    },
+    "Greenglobal.Core.Blazor.Server.Host": {
+      "path": "host/Greenglobal.Core.Blazor.Server.Host/Greenglobal.Core.Blazor.Server.Host.abppkg",
+      "folder": "host"
+    }
+  }
+}

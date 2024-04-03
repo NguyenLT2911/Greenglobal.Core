@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.prod.json",
+  "compilerOptions": {
+    "paths": {
+      "@greenglobal/core": [
+        "projects/core/src/public-api.ts"
+      ],
+      "@greenglobal/core/config": [
+        "projects/core/config/src/public-api.ts"
+      ],
+      "@proxy": ["projects/core/src/lib/proxy/index.ts"],
+      "@proxy/*": ["projects/core/src/lib/proxy/*"]
+    }
+  }
+}
