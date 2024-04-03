@@ -1,33 +1,73 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Greenglobal.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Greenglobal.Core.EntityFrameworkCore;
 
 public static class CoreDbContextModelCreatingExtensions
 {
     public static void ConfigureCore(
-        this ModelBuilder builder)
+        this ModelBuilder builder,
+            Action<CoreModelBuilderConfigurationOptions> optionsAction = null)
     {
         Check.NotNull(builder, nameof(builder));
 
-        /* Configure all entities here. Example:
+        var options = new CoreModelBuilderConfigurationOptions(
+                CoreDbProperties.DbTablePrefix,
+                CoreDbProperties.DbSchema
+            );
 
-        builder.Entity<Question>(b =>
+            optionsAction?.Invoke(options);
+
+        builder.Entity<Unit>(b =>
         {
-            //Configure table & schema name
-            b.ToTable(CoreDbProperties.DbTablePrefix + "Questions", CoreDbProperties.DbSchema);
-
+            b.ToTable(options.TablePrefix + "Units", CoreDbProperties.DbSchemaAuth);
             b.ConfigureByConvention();
-
-            //Properties
-            b.Property(q => q.Title).IsRequired().HasMaxLength(QuestionConsts.MaxTitleLength);
-
-            //Relations
-            b.HasMany(question => question.Tags).WithOne().HasForeignKey(qt => qt.QuestionId);
-
-            //Indexes
-            b.HasIndex(q => q.CreationTime);
         });
-        */
+
+        builder.Entity<Department>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Departments", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Role>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Roles", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<User>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Users", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<UserRoleDept>(b =>
+        {
+            b.ToTable(options.TablePrefix + "UserRoleDepts", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Module>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Modules", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Entities.Action>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Actions", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Permission>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Permissions", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
     }
 }

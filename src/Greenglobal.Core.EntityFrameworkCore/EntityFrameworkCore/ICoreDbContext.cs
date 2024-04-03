@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Data;
+﻿using Greenglobal.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Greenglobal.Core.EntityFrameworkCore;
@@ -6,7 +8,19 @@ namespace Greenglobal.Core.EntityFrameworkCore;
 [ConnectionStringName(CoreDbProperties.ConnectionStringName)]
 public interface ICoreDbContext : IEfCoreDbContext
 {
-    /* Add DbSet for each Aggregate Root here. Example:
-     * DbSet<Question> Questions { get; }
-     */
+    public DbSet<Unit> Units { get; set; }
+
+    public DbSet<Department> Departments { get; set; }
+
+    public DbSet<Role> Roles { get; set; }
+
+    public DbSet<User> Users { get; set; }
+
+    public DbSet<UserRoleDept> UserRoleDepts { get; set; }
+
+    public DbSet<Module> Modules { get; set; }
+
+    public DbSet<Action> Actions { get; set; }
+
+    public DbSet<Permission> Permissions { get; set; }
 }
