@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
@@ -22,11 +23,13 @@ namespace Greenglobal.Core.Models
         /// <summary>
         /// Total row
         /// </summary>
+        [JsonPropertyName("toral_row")]
         public int TotalRow { get; set; }
 
         /// <summary>
         /// Number of page
         /// </summary>
+        [JsonPropertyName("page_number")]
         public int PageNumber { get; set; }
 
         /// <summary>

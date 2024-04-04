@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Volo.Abp.Application.Dtos;
 
@@ -26,5 +27,11 @@ namespace Greenglobal.Core.Models
 
         [JsonPropertyName("updated_name")]
         public string? UpdatedName { get; set; }
+
+        public UnitResponse? Parent { get; set; }
+
+        public List<UnitResponse>? Children { get; set; }
+
+        public List<DepartmentResponse>? Departments { get; set; }
     }
 }

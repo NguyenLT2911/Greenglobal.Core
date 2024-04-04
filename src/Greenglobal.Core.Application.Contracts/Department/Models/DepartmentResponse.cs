@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Volo.Abp.Application.Dtos;
 
@@ -31,5 +32,9 @@ namespace Greenglobal.Core.Models
         public string? UpdatedName { get; set; }
 
         public UnitResponse Unit { get; set; }
+
+        public List<DepartmentResponse>? Children { get; set; }
+
+        public DepartmentResponse? Parent { get; set; }
     }
 }

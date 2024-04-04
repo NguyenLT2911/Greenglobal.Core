@@ -9,7 +9,5 @@ namespace Greenglobal.Core.Models
         public Guid ActionId { get; set; }
 
         public bool IsAllowed { get; set; }
-
-        public Action Action { get; set; }
     }
 }

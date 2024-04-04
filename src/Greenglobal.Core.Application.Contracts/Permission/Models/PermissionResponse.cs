@@ -17,6 +17,6 @@ namespace Greenglobal.Core.Models
 
         public RoleResponse Role { get; set; }
 
-        public Action Action { get; set; }
+        public ActionResponse Action { get; set; }
     }
 }

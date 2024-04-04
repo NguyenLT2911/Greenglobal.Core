@@ -3,17 +3,16 @@
     /// <summary>
     /// Paging Model Request
     /// </summary>
-    public class PageRequest
+    public class PageBaseRequest
     {
         /// <summary>
         /// Number of page
         /// </summary>
         public int PageNumber { get; set; }
 
-
         /// <summary>
         /// Size of page
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = int.MaxValue;
     }
 }
