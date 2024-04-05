@@ -3,6 +3,7 @@ using System;
 using Greenglobal.Core.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Greenglobal.Core.Migrations
 {
     [DbContext(typeof(CoreHttpApiHostMigrationsDbContext))]
-    partial class CoreHttpApiHostMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240405081946_Add_Entity_Functions")]
+    partial class Add_Entity_Functions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,30 +110,6 @@ namespace Greenglobal.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Functions", "auth");
-                });
-
-            modelBuilder.Entity("Greenglobal.Core.Entities.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FunctionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsAllowed")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FunctionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Permissions", "auth");
                 });
 
             modelBuilder.Entity("Greenglobal.Core.Entities.Role", b =>
@@ -309,25 +288,6 @@ namespace Greenglobal.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Unit");
-                });
-
-            modelBuilder.Entity("Greenglobal.Core.Entities.Permission", b =>
-                {
-                    b.HasOne("Greenglobal.Core.Entities.Function", "Function")
-                        .WithMany()
-                        .HasForeignKey("FunctionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Greenglobal.Core.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Function");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Greenglobal.Core.Entities.UserRoleDept", b =>

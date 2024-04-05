@@ -10,16 +10,13 @@ public class CoreApplicationAutoMapperProfile : Profile
     public CoreApplicationAutoMapperProfile()
     {
         CreateMap<Unit, UnitResponse>().IgnoreAllNonExisting();
-        CreateMap<UnitRequest, Unit>(MemberList.Source);
+        CreateMap<UnitRequest, Unit>();
 
         CreateMap<Department, DepartmentResponse>().IgnoreAllNonExisting();
         CreateMap<DepartmentRequest, Department>(MemberList.Source);
 
-        CreateMap<Module, ModuleResponse>().IgnoreAllNonExisting();
-        CreateMap<ModuleRequest, Module>(MemberList.Source);
-
-        CreateMap<Action, ActionResponse>().IgnoreAllNonExisting();
-        CreateMap<ActionRequest, Action>(MemberList.Source);
+        CreateMap<Function, FunctionResponse>().IgnoreAllNonExisting();
+        CreateMap<FunctionRequest, Function>(MemberList.Source);
 
         CreateMap<User, UserResponse>().IgnoreAllNonExisting();
         CreateMap<UserRequest, User>(MemberList.Source);

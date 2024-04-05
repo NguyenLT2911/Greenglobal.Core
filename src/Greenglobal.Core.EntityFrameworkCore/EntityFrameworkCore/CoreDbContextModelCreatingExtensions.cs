@@ -51,15 +51,9 @@ public static class CoreDbContextModelCreatingExtensions
             b.ConfigureByConvention();
         });
 
-        builder.Entity<Module>(b =>
+        builder.Entity<Function>(b =>
         {
-            b.ToTable(options.TablePrefix + "Modules", CoreDbProperties.DbSchemaAuth);
-            b.ConfigureByConvention();
-        });
-
-        builder.Entity<Entities.Action>(b =>
-        {
-            b.ToTable(options.TablePrefix + "Actions", CoreDbProperties.DbSchemaAuth);
+            b.ToTable(options.TablePrefix + "Functions", CoreDbProperties.DbSchemaAuth);
             b.ConfigureByConvention();
         });
 
@@ -68,6 +62,5 @@ public static class CoreDbContextModelCreatingExtensions
             b.ToTable(options.TablePrefix + "Permissions", CoreDbProperties.DbSchemaAuth);
             b.ConfigureByConvention();
         });
-
     }
 }

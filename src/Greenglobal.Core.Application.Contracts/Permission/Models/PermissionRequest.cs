@@ -6,7 +6,7 @@ namespace Greenglobal.Core.Models
     {
         public Guid RoleId { get; set; }
 
-        public Guid ActionId { get; set; }
+        public Guid FunctionId { get; set; }
 
         public bool IsAllowed { get; set; }
     }

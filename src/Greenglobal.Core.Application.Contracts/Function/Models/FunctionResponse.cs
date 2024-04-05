@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Volo.Abp.Application.Dtos;
 
 namespace Greenglobal.Core.Models
 {
-    public class ActionResponse : EntityDto<Guid>
+    public class FunctionResponse : EntityDto<Guid>
     {
-        [JsonPropertyName("module_id")]
-        public Guid ModuleId { get; set; }
-
-        [JsonPropertyName("action_code")]
-        public string ActionCode { get; set; }
+        [JsonPropertyName("parent_id")]
+        public Guid? ParentId { get; set; }
 
         public string Name { get; set; }
+
+        [JsonPropertyName("is_module")]
+        public bool IsModule { get; set; }
 
         [JsonPropertyName("sort_order")]
         public int SortOrder { get; set; }
@@ -21,6 +22,6 @@ namespace Greenglobal.Core.Models
 
         public int Status { get; set; }
 
-        public ModuleResponse Module { get; set; }
+        public List<FunctionResponse> Children { get; set; }
     }
 }

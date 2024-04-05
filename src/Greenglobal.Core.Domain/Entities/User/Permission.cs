@@ -12,7 +12,7 @@ namespace Greenglobal.Core.Entities
         public Guid RoleId { get; set; }
 
         [Required]
-        public Guid ActionId { get; set; }
+        public Guid FunctionId { get; set; }
 
         [Required]
         public bool IsAllowed { get; set; } = true;
@@ -20,8 +20,8 @@ namespace Greenglobal.Core.Entities
         [ForeignKey("RoleId")]
         public Role Role { get; set; }
 
-        [ForeignKey("ActionId")]
-        public Action Action { get; set; }
+        [ForeignKey("FunctionId")]
+        public Function Function { get; set; }
 
     }
 }

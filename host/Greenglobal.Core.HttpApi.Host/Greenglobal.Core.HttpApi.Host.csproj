@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\gis-app-desktop-opensource\host\Greenglobal.Core.Host.Shared\Greenglobal.Core.Host.Shared.csproj" />
     <ProjectReference Include="..\..\src\Greenglobal.Core.HttpApi\Greenglobal.Core.HttpApi.csproj" />
     <ProjectReference Include="..\..\src\Greenglobal.Core.Application\Greenglobal.Core.Application.csproj" />
     <ProjectReference Include="..\..\src\Greenglobal.Core.EntityFrameworkCore\Greenglobal.Core.EntityFrameworkCore.csproj" />

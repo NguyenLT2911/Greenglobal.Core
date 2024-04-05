@@ -15,27 +15,24 @@ using Volo.Abp.Domain.Entities;
 namespace Greenglobal.Core.Services
 {
     [RemoteService(IsMetadataEnabled = false)]
-    public class UnitService :
+    public class FunctionService :
         CrudAppService<
-        Unit,
-        UnitResponse,
+        Function,
+        FunctionResponse,
         Guid,
         PagedAndSortedResultRequestDto,
-        UnitRequest,
-        UnitRequest>,
-        IUnitService
+        FunctionRequest,
+        FunctionRequest>,
+        IFunctionService
     {
-        private readonly IUnitRepository _repository;
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IFunctionRepository _repository;
 
-        public UnitService(IUnitRepository repository,
-            IDepartmentRepository departmentRepository) : base(repository)
+        public FunctionService(IFunctionRepository repository) : base(repository)
         {
             _repository = repository;
-            _departmentRepository = departmentRepository;
         }
 
-        public async Task<BaseResponse<bool>> CreateUnitAsync(UnitRequest request)
+        public async Task<BaseResponse<bool>> CreateFunctionAsync(FunctionRequest request)
         {
             var result = new BaseResponse<bool>();
             try
@@ -46,17 +43,17 @@ namespace Greenglobal.Core.Services
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, request.IsModule ? "Tên ứng dụng" : "Tên chức năng");
                     return result;
                 }
 
                 if (await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, request.IsModule ? "Tên ứng dụng" : "Tên chức năng");
                     return result;
                 }
-                var maxSortOrder = _repository.GetMaxSortOrder(request.ParentId);
+                var maxSortOrder = _repository.GetMaxSortOrder(null);
                 maxSortOrder += 1;
 
                 request.SortOrder = maxSortOrder;
@@ -75,7 +72,7 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<bool>> UpdateInitAsync(Guid id, UnitRequest request)
+        public async Task<BaseResponse<bool>> UpdateFunctionAsync(Guid id, FunctionRequest request)
         {
             var result = new BaseResponse<bool>();
             try
@@ -87,25 +84,24 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
                     return result;
                 }
 
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, entity.IsModule ? "Tên ứng dụng" : "Tên chức năng");
                     return result;
                 }
 
                 if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, entity.IsModule ? "Tên ứng dụng" : "Tên chức năng");
                     return result;
                 }
                 base.MapToEntity(request, entity);
-                entity.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(entity);
                 return result;
@@ -119,7 +115,7 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<bool>> DeleteUnitAsync(Guid id)
+        public async Task<BaseResponse<bool>> DeleteFunctionAsync(Guid id)
         {
             var result = new BaseResponse<bool>();
             try
@@ -130,11 +126,10 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
                     return result;
                 }
                 entity.Status = -1;
-                entity.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(entity);
                 return result;
@@ -148,12 +143,12 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<PageBaseResponse<UnitResponse>> GetListUnitAsync(PageBaseRequest pageRequest, SearchBaseRequest request)
+        public async Task<PageBaseResponse<FunctionResponse>> GetListFunctionAsync(PageBaseRequest pageRequest, SearchBaseRequest request)
         {
-            var result = new PageBaseResponse<UnitResponse>();
+            var result = new PageBaseResponse<FunctionResponse>();
             try
             {
-                var query = _repository.GetListUnit(request.Status);
+                var query = _repository.GetListFunction(request.Status);
                 if (!string.IsNullOrEmpty(request.Keyword))
                 {
                     query = _repository.SearchKeyword(query, request.Keyword);
@@ -162,7 +157,7 @@ namespace Greenglobal.Core.Services
 
                 result.PageNumber = pageRequest.PageNumber;
                 result.TotalRow = await AsyncExecuter.CountAsync(query);
-                result.Data = ObjectMapper.Map<List<Unit>, List<UnitResponse>>
+                result.Data = ObjectMapper.Map<List<Function>, List<FunctionResponse>>
                     (await AsyncExecuter.ToListAsync(query.Page(pageRequest.PageNumber, pageRequest.PageSize)));
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -175,25 +170,23 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<UnitResponse>> GetByIdAync(Guid id)
+        public async Task<BaseResponse<FunctionResponse>> GetByIdAync(Guid id)
         {
-            var result = new BaseResponse<UnitResponse>();
+            var result = new BaseResponse<FunctionResponse>();
             try
             {
-                var entity = await _repository.GetAsync(id);
+                var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
                 if (entity == null)
                 {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
                     return result;
                 }
-                result.Data = ObjectMapper.Map<Unit, UnitResponse>(entity);
-                //Get unit parent when this unit is child
-                if (result.Data.ParentId.HasValue)
-                {
-                    result.Data.Parent = ObjectMapper.Map<Unit, UnitResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
-                }
-                result.Data.Departments = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>
-                    (await AsyncExecuter.ToListAsync(_departmentRepository.GetByUnitId(id)));
+                result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
+                //Get Function parent when this Function is child
+                //if (result.Data.ParentId.HasValue)
+                //{
+                //    result.Data.Parent = ObjectMapper.Map<Function, FunctionResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
+                //}
 
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -206,29 +199,26 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<UnitResponse>> GetByIdMultiLevelAync(Guid id)
+        public async Task<BaseResponse<FunctionResponse>> GetByIdMultiLevelAync(Guid id)
         {
-            var result = new BaseResponse<UnitResponse>();
+            var result = new BaseResponse<FunctionResponse>();
             try
             {
-                var entity = await _repository.GetAsync(id);
+                var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
                 if (entity == null)
                 {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Đơn vị");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
                     return result;
                 }
-                result.Data = ObjectMapper.Map<Unit, UnitResponse>(entity);
-                //Get unit parent when this unit is child
-                if (result.Data.ParentId.HasValue)
-                {
-                    result.Data.Parent = ObjectMapper.Map<Unit, UnitResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
-                }
-                //Get Hierarchy unit children when this unit is parent
-                else
-                    result.Data.Children = await GetHierarchy(id);
-
-                result.Data.Departments = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>
-                    (await AsyncExecuter.ToListAsync(_departmentRepository.GetByUnitId(id)));
+                result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
+                //Get Function parent when this Function is child
+                //if (result.Data.ParentId.HasValue)
+                //{
+                //    result.Data.Parent = ObjectMapper.Map<Function, FunctionResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
+                //}
+                //Get Hierarchy Function children when this Function is parent
+                //else
+                result.Data.Children = await GetHierarchy(id);
 
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -241,18 +231,13 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        private async Task<List<UnitResponse>> GetHierarchy(Guid id)
+        private async Task<List<FunctionResponse>> GetHierarchy(Guid id)
         {
-            var result = ObjectMapper.Map<List<Unit>, List<UnitResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
+            var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
             if (result.Any())
             {
-                var lstUnitIds = result.Select(x => x.Id).ToList();
-                var lstDepartment = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>
-                    (await AsyncExecuter.ToListAsync(_departmentRepository.GetByUnitIds(lstUnitIds)));
-
-                foreach(var child in result)
+                foreach (var child in result)
                 {
-                    child.Departments = lstDepartment.Where(department => department.UnitId == child.Id).ToList();
                     child.Children = await GetHierarchy(child.Id);
                 }
             }

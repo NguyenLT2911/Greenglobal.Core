@@ -1,20 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp.Domain.Entities;
 
 namespace Greenglobal.Core.Entities
 {
-    public class Action : Entity<Guid>
+    public class Function : Entity<Guid>
     {
-        [Required]
-        public Guid ModuleId { get; set; }
-
-        [Required, MaxLength(20)]
-        public string ActionCode { get; set; }
+        public Guid? ParentId { get; set; }
 
         [Required, MaxLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        [Required]
+        public bool IsModule { get; set; } = true;
 
         [Required]
         public int SortOrder { get; set; }
@@ -25,7 +23,9 @@ namespace Greenglobal.Core.Entities
         [Required]
         public int Status { get; set; } = 1;
 
-        [ForeignKey("ModuleId")]
-        public Module Module { get; set; }
+        public string PathImage { get; set; }
+
+        [Required, MaxLength(50)]
+        public string Code { get; set; }
     }
 }

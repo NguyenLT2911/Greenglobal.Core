@@ -101,9 +101,7 @@ namespace Greenglobal.Core.Services
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên phòng ban");
                     return result;
                 }
-                var maxSortOrder = _repository.GetMaxSortOrder(request.ParentId);
                 base.MapToEntity(request, entity);
-                entity.SortOrder = maxSortOrder++;
                 entity.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(entity);

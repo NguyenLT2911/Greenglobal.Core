@@ -9,14 +9,12 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("role_id")]
         public Guid RoleId { get; set; }
 
-        [JsonPropertyName("action_id")]
-        public Guid ActionId { get; set; }
+        [JsonPropertyName("function_id")]
+        public Guid FunctionId { get; set; }
 
         [JsonPropertyName("is_allowed")]
         public bool IsAllowed { get; set; }
 
         public RoleResponse Role { get; set; }
-
-        public ActionResponse Action { get; set; }
     }
 }

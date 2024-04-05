@@ -5,13 +5,13 @@ using Volo.Abp.Application.Services;
 
 namespace Greenglobal.Core.Services
 {
-    public interface IModuleService :
+    public interface IFunctionService :
         ICrudAppService<
-            ModuleResponse,
+            FunctionResponse,
             Guid,
             PagedAndSortedResultRequestDto,
-            ModuleRequest,
-            ModuleRequest>
+            FunctionRequest,
+            FunctionRequest>
     {
     }
 }
