@@ -17,7 +17,7 @@ namespace Greenglobal.Core.Repositories
 
         IQueryable<User> GetListUser(int? status);
 
-        IQueryable<User> SearchKeyword(IQueryable<User> query, string keyword);
+        IQueryable<User> SearchKeyword(IQueryable<User> query, string fullName);
 
         IQueryable<User> GetById(Guid id);
     }

@@ -1,11 +1,14 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
     public class RoleRequest
     {
-        public string Name { get; set; }
+        public string? Code { get; set; }
 
+        public string? Name { get; set; }
+
+        [JsonPropertyName("sort_order")]
         public int SortOrder { get; set; }
 
         public string? Description { get; set; }

@@ -13,14 +13,14 @@ namespace Greenglobal.Core.Repositories
     {
         public RoleRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
 
+        public Task<bool> IsDupplicationCode(string code)
+        {
+            return GetDbSetAsync().Result.AnyAsync(x => x.Code == code);
+        }
+
         public Task<bool> IsDupplicationName(string name)
         {
             return GetDbSetAsync().Result.AnyAsync(x => x.Name == name);
-        }
-
-        public Task<bool> IsDupplicationDescription(string description)
-        {
-            return GetDbSetAsync().Result.AnyAsync(x => x.Description == description);
         }
 
         public int GetMaxSortOrder()

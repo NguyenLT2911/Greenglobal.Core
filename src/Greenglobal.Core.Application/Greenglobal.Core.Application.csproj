@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Volo.Abp.AutoMapper" Version="8.0.5" />
     <PackageReference Include="Volo.Abp.Ddd.Application" Version="8.0.5" />
     <ProjectReference Include="..\Greenglobal.Core.Application.Contracts\Greenglobal.Core.Application.Contracts.csproj" />

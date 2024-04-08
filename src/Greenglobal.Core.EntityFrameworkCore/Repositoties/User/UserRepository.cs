@@ -35,10 +35,9 @@ namespace Greenglobal.Core.Repositories
                 .AsNoTracking();
         }
 
-        public IQueryable<User> SearchKeyword(IQueryable<User> query, string keyword)
+        public IQueryable<User> SearchKeyword(IQueryable<User> query, string fullName)
         {
-            return query.Where(x => EF.Functions.Unaccent(x.FullName.ToLower().Trim()).Contains(EF.Functions.Unaccent(keyword.ToLower().Trim()))
-            || EF.Functions.Unaccent(x.UserName.ToLower().Trim()).Contains(EF.Functions.Unaccent(keyword.ToLower().Trim())));
+            return query.Where(x => EF.Functions.Unaccent(x.FullName.ToLower().Trim()).Contains(EF.Functions.Unaccent(fullName.ToLower().Trim())));
         }
 
         public IQueryable<User> GetById(Guid id)

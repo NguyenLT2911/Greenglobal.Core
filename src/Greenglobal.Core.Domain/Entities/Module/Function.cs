@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Domain.Entities;
 
@@ -27,5 +28,7 @@ namespace Greenglobal.Core.Entities
 
         [Required, MaxLength(50)]
         public string Code { get; set; }
+
+        //public List<Function>? Children { get; set; }
     }
 }

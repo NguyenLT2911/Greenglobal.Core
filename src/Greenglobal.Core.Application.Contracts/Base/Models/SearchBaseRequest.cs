@@ -9,7 +9,7 @@
         /// Keyword
         /// Example: code, name, ...
         /// </summary>
-        public string? Keyword { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Status

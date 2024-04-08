@@ -58,7 +58,7 @@ public class CoreHttpApiHostModule : AbpModule
 
         Configure<AbpDbContextOptions>(options =>
         {
-            options.UseNpgsql();
+            options.UseNpgsql();    
         });
 
         Configure<AbpMultiTenancyOptions>(options =>

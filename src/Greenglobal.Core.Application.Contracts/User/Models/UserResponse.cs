@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Volo.Abp.Application.Dtos;
 
@@ -12,8 +13,6 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("user_name")]
 
         public string UserName { get; set; }
-
-        public string Password { get; set; }
 
         public string? Email { get; set; }
 
@@ -43,5 +42,11 @@ namespace Greenglobal.Core.Models
 
         [JsonPropertyName("updated_name")]
         public string? UpdatedName { get; set; }
+
+        public RoleResponse? Role { get; set; }
+
+        public DepartmentResponse? Department { get; set; }
+
+        public List<UserRoleDeptResponse>? UserRoleDepts { get; set; }
     }
 }

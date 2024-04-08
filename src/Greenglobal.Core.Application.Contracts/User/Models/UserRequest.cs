@@ -1,31 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
     public class UserRequest
     {
+        [JsonPropertyName("full_name")]
         public string FullName { get; set; }
 
+        [JsonPropertyName("user_name")]
         public string UserName { get; set; }
 
         public string Password { get; set; }
 
         public string? Email { get; set; }
 
+        [JsonPropertyName("phone_number")]
         public string? PhoneNumber { get; set; }
 
+        [JsonPropertyName("avatar_path")]
         public string? AvatarPath { get; set; }
 
+        [JsonPropertyName("sort_order")]
         public int SortOrder { get; set; }
 
         public string? Description { get; set; }
 
         public int Status { get; set; } = 1;
 
-        public Guid UnitId { get; set; }
-
+        [JsonPropertyName("department_id")]
         public Guid DepartmentId { get; set; }
-
+        
+        [JsonPropertyName("role_id")]
         public Guid RoleId { get; set; }
+
+        public List<UserRoleDeptRequest>? Concurrent { get; set; }
     }
 }

@@ -43,14 +43,14 @@ namespace Greenglobal.Core.Services
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, request.IsModule ? "Tên ứng dụng" : "Tên chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên ứng dụng");
                     return result;
                 }
 
                 if (await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, request.IsModule ? "Tên ứng dụng" : "Tên chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên ứng dụng");
                     return result;
                 }
                 var maxSortOrder = _repository.GetMaxSortOrder(null);
@@ -60,10 +60,38 @@ namespace Greenglobal.Core.Services
                 var entity = base.MapToEntity(request);
                 EntityHelper.TrySetId(entity, GuidGenerator.Create);
                 entity.Status = 1;
-                await _repository.InsertAsync(entity);
+
+                var lstFunction = new List<Function>();
+                lstFunction.Add(entity);
+
+                if (request.Children != null && request.Children.Any())
+                {
+                    var lstChildren = ObjectMapper.Map<List<FunctionRequest>, List<Function>>(request.Children);
+                    foreach(var childA in lstChildren)
+                    {
+                        EntityHelper.TrySetId(childA, GuidGenerator.Create);
+                        childA.ParentId = entity.Id;
+                        childA.IsModule = true;
+                        lstFunction.Add(childA);
+                        //foreach(var childB in childA.Children)
+                        //{
+                        //    EntityHelper.TrySetId(childB, GuidGenerator.Create);
+                        //    childB.ParentId = childA.Id;
+                        //    lstFunction.Add(childB);
+                        //    foreach (var childC in childB.Children)
+                        //    {
+                        //        EntityHelper.TrySetId(childC, GuidGenerator.Create);
+                        //        childC.ParentId = childB.Id;
+                        //        lstFunction.Add(childC);
+                        //    }
+                        //}
+                    }
+                }
+                //lstFunction.ForEach(x => x.Children = null);
+                await _repository.InsertManyAsync(lstFunction);
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.Data = false;
                 result.Message = ErrorMessages.POST.CannotCreate;
@@ -132,6 +160,7 @@ namespace Greenglobal.Core.Services
                 entity.Status = -1;
 
                 await _repository.UpdateAsync(entity);
+                result.Message = ErrorMessages.DELETE.Deleted;
                 return result;
             }
             catch (Exception)
@@ -149,9 +178,9 @@ namespace Greenglobal.Core.Services
             try
             {
                 var query = _repository.GetListFunction(request.Status);
-                if (!string.IsNullOrEmpty(request.Keyword))
+                if (!string.IsNullOrEmpty(request.Name))
                 {
-                    query = _repository.SearchKeyword(query, request.Keyword);
+                    query = _repository.SearchKeyword(query, request.Name);
                 }
                 query = query.OrderBy(x => x.SortOrder);
 

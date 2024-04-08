@@ -10,24 +10,24 @@ public class CoreApplicationAutoMapperProfile : Profile
     public CoreApplicationAutoMapperProfile()
     {
         CreateMap<Unit, UnitResponse>().IgnoreAllNonExisting();
-        CreateMap<UnitRequest, Unit>(MemberList.Source);
+        CreateMap<UnitRequest, Unit>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<Department, DepartmentResponse>().IgnoreAllNonExisting();
-        CreateMap<DepartmentRequest, Department>(MemberList.Source);
+        CreateMap<DepartmentRequest, Department>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<Function, FunctionResponse>().IgnoreAllNonExisting();
-        CreateMap<FunctionRequest, Function>(MemberList.Source);
+        CreateMap<FunctionRequest, Function>().IgnoreAllNonExisting();
 
         CreateMap<User, UserResponse>().IgnoreAllNonExisting();
-        CreateMap<UserRequest, User>(MemberList.Source);
+        CreateMap<UserRequest, User>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<Role, RoleResponse>().IgnoreAllNonExisting();
-        CreateMap<RoleRequest, Role>(MemberList.Source);
+        CreateMap<RoleRequest, Role>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<Permission, PermissionResponse>().IgnoreAllNonExisting();
-        CreateMap<PermissionRequest, Permission>(MemberList.Source);
+        CreateMap<PermissionRequest, Permission>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<UserRoleDept, UserRoleDeptResponse>().IgnoreAllNonExisting();
-        CreateMap<UserRoleDeptRequest, UserRoleDept>(MemberList.Source);
+        CreateMap<UserRoleDeptRequest, UserRoleDept>(MemberList.Source).IgnoreAllNonExisting();
     }
 }

@@ -9,7 +9,7 @@ namespace Greenglobal.Core.Repositories
 {
     public interface IDepartmentRepository : IRepository<Department, Guid>
     {
-        Task<bool> IsDupplicationName(string name);
+        Task<bool> IsDupplicationName(string name, Guid unitId);
 
         int GetMaxSortOrder(Guid? parentId);
 

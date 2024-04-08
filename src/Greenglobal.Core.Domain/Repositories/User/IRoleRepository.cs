@@ -8,7 +8,7 @@ namespace Greenglobal.Core.Repositories
 {
     public interface IRoleRepository : IRepository<Role, Guid>
     {
-        Task<bool> IsDupplicationName(string name);
+        Task<bool> IsDupplicationCode(string code);
 
         int GetMaxSortOrder();
 
@@ -16,6 +16,6 @@ namespace Greenglobal.Core.Repositories
 
         IQueryable<Role> SearchKeyword(IQueryable<Role> query, string keyword);
 
-        Task<bool> IsDupplicationDescription(string description);
+        Task<bool> IsDupplicationName(string name);
     }
 }

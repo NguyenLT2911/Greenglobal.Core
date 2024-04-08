@@ -47,7 +47,7 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (await _repository.IsDupplicationName(request.Name))
+                if (await _repository.IsDupplicationName(request.Name, request.UnitId))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên phòng ban");
@@ -84,7 +84,7 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "phòng ban");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Phòng ban");
                     return result;
                 }
 
@@ -95,7 +95,7 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
+                if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name, request.UnitId))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên phòng ban");
@@ -127,13 +127,14 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "phòng ban");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Phòng ban");
                     return result;
                 }
                 entity.Status = -1;
                 entity.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(entity);
+                result.Message = ErrorMessages.DELETE.Deleted;
                 return result;
             }
             catch (Exception)
@@ -151,9 +152,9 @@ namespace Greenglobal.Core.Services
             try
             {
                 var query = _repository.GetListDepartment(request.Status);
-                if (!string.IsNullOrEmpty(request.Keyword))
+                if (!string.IsNullOrEmpty(request.Name))
                 {
-                    query = _repository.SearchKeyword(query, request.Keyword);
+                    query = _repository.SearchKeyword(query, request.Name);
                 }
                 query = query.OrderBy(x => x.SortOrder);
 
@@ -180,7 +181,7 @@ namespace Greenglobal.Core.Services
                 var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
                 if (entity == null)
                 {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "phòng ban");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Phòng ban");
                     return result;
                 }
                 result.Data = ObjectMapper.Map<Department, DepartmentResponse>(entity);
@@ -209,7 +210,7 @@ namespace Greenglobal.Core.Services
                 var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
                 if (entity == null)
                 {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "phòng ban");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Phòng ban");
                     return result;
                 }
                 result.Data = ObjectMapper.Map<Department, DepartmentResponse>(entity);

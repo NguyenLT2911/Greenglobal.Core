@@ -35,9 +35,18 @@ namespace Greenglobal.Core.Controllers
         }
 
         [HttpGet, Route("{id}/multilevel")]
-        public async Task<IActionResult> GetMultiLevelAsync(Guid id)
+        public async Task<IActionResult> GetByIdMultiLevelAync(Guid id)
         {
             var result = await _service.GetByIdMultiLevelAync(id);
+            if (result.Data == null)
+                return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet, Route("{id}/departments/multilevel")]
+        public async Task<IActionResult> GetByIdMultiLevelHaveDepartmentAync(Guid id)
+        {
+            var result = await _service.GetByIdMultiLevelHaveDepartmentAync(id);
             if (result.Data == null)
                 return BadRequest(result);
             return Ok(result);

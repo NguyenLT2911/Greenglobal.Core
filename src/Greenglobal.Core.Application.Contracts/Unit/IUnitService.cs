@@ -25,5 +25,7 @@ namespace Greenglobal.Core.Services
         Task<BaseResponse<UnitResponse>> GetByIdAync(Guid id);
 
         Task<BaseResponse<UnitResponse>> GetByIdMultiLevelAync(Guid id);
+
+        Task<BaseResponse<UnitResponse>> GetByIdMultiLevelHaveDepartmentAync(Guid id);
     }
 }

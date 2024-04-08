@@ -6,7 +6,9 @@ namespace Greenglobal.Core.Models
 {
     public class RoleResponse : EntityDto<Guid>
     {
-        public string Name { get; set; }
+        public string? Code { get; set; }
+
+        public string? Name { get; set; }
 
         [JsonPropertyName("sort_order")]
         public int SortOrder { get; set; }

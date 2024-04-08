@@ -40,28 +40,28 @@ namespace Greenglobal.Core.Services
                 result.Data = true;
                 result.Message = ErrorMessages.POST.Created;
 
-                if (string.IsNullOrEmpty(request.Name))
+                if (string.IsNullOrEmpty(request.Code))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Mã vai trò");
                     return result;
                 }
 
-                if (string.IsNullOrEmpty(request.Description))
+                if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên vai trò");
                     return result;
                 }
 
-                if (await _repository.IsDupplicationName(request.Name))
+                if (await _repository.IsDupplicationCode(request.Code))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Mã vai trò");
                     return result;
                 }
 
-                if (await _repository.IsDupplicationDescription(request.Description))
+                if (await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên vai trò");
@@ -103,28 +103,28 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (string.IsNullOrEmpty(request.Name))
+                if (string.IsNullOrEmpty(request.Code))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Mã vai trò");
                     return result;
                 }
 
-                if (string.IsNullOrEmpty(request.Description))
+                if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên vai trò");
                     return result;
                 }
 
-                if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
+                if (request.Code != entity?.Code && await _repository.IsDupplicationCode(request.Code))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Mã vai trò");
                     return result;
                 }
 
-                if (request.Description != entity?.Description && await _repository.IsDupplicationDescription(request.Description))
+                if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên vai trò");
@@ -163,6 +163,7 @@ namespace Greenglobal.Core.Services
                 entity.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(entity);
+                result.Message = ErrorMessages.DELETE.Deleted;
                 return result;
             }
             catch (Exception)
@@ -180,9 +181,9 @@ namespace Greenglobal.Core.Services
             try
             {
                 var query = _repository.GetListRole(request.Status);
-                if (!string.IsNullOrEmpty(request.Keyword))
+                if (!string.IsNullOrEmpty(request.Name))
                 {
-                    query = _repository.SearchKeyword(query, request.Keyword);
+                    query = _repository.SearchKeyword(query, request.Name);
                 }
                 query = query.OrderBy(x => x.SortOrder);
 
