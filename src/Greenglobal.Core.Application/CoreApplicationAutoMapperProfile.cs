@@ -10,7 +10,7 @@ public class CoreApplicationAutoMapperProfile : Profile
     public CoreApplicationAutoMapperProfile()
     {
         CreateMap<Unit, UnitResponse>().IgnoreAllNonExisting();
-        CreateMap<UnitRequest, Unit>();
+        CreateMap<UnitRequest, Unit>(MemberList.Source);
 
         CreateMap<Department, DepartmentResponse>().IgnoreAllNonExisting();
         CreateMap<DepartmentRequest, Department>(MemberList.Source);

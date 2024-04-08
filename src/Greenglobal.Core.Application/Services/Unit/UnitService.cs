@@ -167,7 +167,7 @@ namespace Greenglobal.Core.Services
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.Message = ErrorMessages.GET.GetFail;
                 result.Status = 400;
