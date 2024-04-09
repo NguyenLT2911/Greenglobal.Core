@@ -1,5 +1,6 @@
 ﻿using Greenglobal.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -25,5 +26,7 @@ namespace Greenglobal.Core.Services
         Task<BaseResponse<DepartmentResponse>> GetByIdAsync(Guid id);
 
         Task<BaseResponse<DepartmentResponse>> GetByIdMultiLevelAync(Guid id);
+
+        Task<List<DepartmentResponse>> GetHierarchy(Guid id);
     }
 }

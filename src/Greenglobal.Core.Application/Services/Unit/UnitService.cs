@@ -11,6 +11,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.ObjectMapping;
 
 namespace Greenglobal.Core.Services
 {
@@ -27,12 +28,15 @@ namespace Greenglobal.Core.Services
     {
         private readonly IUnitRepository _repository;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IDepartmentService _departmentService;
 
         public UnitService(IUnitRepository repository,
-            IDepartmentRepository departmentRepository) : base(repository)
+            IDepartmentRepository departmentRepository,
+            IDepartmentService departmentService) : base(repository)
         {
             _repository = repository;
             _departmentRepository = departmentRepository;
+            _departmentService = departmentService;
         }
 
         public async Task<BaseResponse<bool>> CreateUnitAsync(UnitRequest request)
@@ -223,8 +227,7 @@ namespace Greenglobal.Core.Services
                     result.Data.Parent = ObjectMapper.Map<Unit, UnitResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
                 }
                 //Get Hierarchy unit children when this unit is parent
-                else
-                    result.Data.Children = await GetHierarchy(id);
+                result.Data.Children = await GetHierarchy(id);
 
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -255,11 +258,21 @@ namespace Greenglobal.Core.Services
                     result.Data.Parent = ObjectMapper.Map<Unit, UnitResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
                 }
                 //Get Hierarchy unit children when this unit is parent
-                else
-                    result.Data.Children = await GetHierarchy(id, true);
+                result.Data.Children = await GetHierarchy(id, true);
 
-                result.Data.Departments = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>
-                    (await AsyncExecuter.ToListAsync(_departmentRepository.GetByUnitId(id)));
+                //Get Hierarchy department from department parent of unit
+                var lstDepartment = _departmentRepository.GetByUnitId(id);
+                lstDepartment = lstDepartment.Where(x => !x.ParentId.HasValue);
+                var departmentParent = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>(await AsyncExecuter.ToListAsync(lstDepartment));
+                result.Data.Departments = new List<DepartmentResponse>();
+                if (departmentParent != null && departmentParent.Any())
+                {
+                    foreach (var department in departmentParent)
+                    {
+                        department.Children = await _departmentService.GetHierarchy(department.Id);
+                        result.Data.Departments.Add(department);
+                    }
+                }
 
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -278,15 +291,28 @@ namespace Greenglobal.Core.Services
             if (result.Any())
             {
                 var lstUnitIds = result.Select(x => x.Id).ToList();
-                var lstDepartment = new List<DepartmentResponse>();
-                if (haveDepartment)
-                    lstDepartment = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>
-                        (await AsyncExecuter.ToListAsync(_departmentRepository.GetByUnitIds(lstUnitIds)));
+
+                //Get Hierarchy department from department parent of unit
+                var lstDepartment = _departmentRepository.GetByUnitIds(lstUnitIds);
+                lstDepartment = lstDepartment.Where(x => !x.ParentId.HasValue);
+                var departmentParent = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>(await AsyncExecuter.ToListAsync(lstDepartment));
 
                 foreach (var child in result)
                 {
-                    if (haveDepartment && lstDepartment.Any())
-                        child.Departments = lstDepartment.Where(department => department.UnitId == child.Id).ToList();
+                    if (haveDepartment && departmentParent.Any())
+                    {
+                        child.Departments = new List<DepartmentResponse>();
+                        //Get lít department by unit
+                        departmentParent = departmentParent.Where(x => x.UnitId == child.Id).ToList();
+                        if (departmentParent.Any())
+                        {
+                            foreach (var department in departmentParent)
+                            {
+                                department.Children = await _departmentService.GetHierarchy(department.Id);
+                                child.Departments.Add(department);
+                            }
+                        }
+                    }
                     child.Children = await GetHierarchy(child.Id);
                 }
             }

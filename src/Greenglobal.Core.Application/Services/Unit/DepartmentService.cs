@@ -234,7 +234,7 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        private async Task<List<DepartmentResponse>> GetHierarchy(Guid id)
+        public async Task<List<DepartmentResponse>> GetHierarchy(Guid id)
         {
             var result = ObjectMapper.Map<List<Department>, List<DepartmentResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
             if (result.Any())

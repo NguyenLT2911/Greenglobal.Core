@@ -338,7 +338,5 @@ namespace Greenglobal.Core.Services
                 return result;
             }
         }
-
-
     }
 }
