@@ -24,11 +24,9 @@ namespace Greenglobal.Core.Entities
         [Required]
         public int Status { get; set; } = 1;
 
-        public string PathImage { get; set; }
+        public string? PathImage { get; set; }
 
         [Required, MaxLength(50)]
         public string Code { get; set; }
-
-        //public List<Function>? Children { get; set; }
     }
 }

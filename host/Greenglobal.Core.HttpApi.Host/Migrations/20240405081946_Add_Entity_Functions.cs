@@ -23,7 +23,7 @@ namespace Greenglobal.Core.Migrations
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    PathImage = table.Column<string>(type: "text", nullable: false),
+                    PathImage = table.Column<string>(type: "text", nullable: true),
                     Code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>

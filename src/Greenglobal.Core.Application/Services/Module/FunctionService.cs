@@ -61,33 +61,7 @@ namespace Greenglobal.Core.Services
                 EntityHelper.TrySetId(entity, GuidGenerator.Create);
                 entity.Status = 1;
 
-                var lstFunction = new List<Function>();
-                lstFunction.Add(entity);
-
-                if (request.Children != null && request.Children.Any())
-                {
-                    var lstChildren = ObjectMapper.Map<List<FunctionRequest>, List<Function>>(request.Children);
-                    foreach(var childA in lstChildren)
-                    {
-                        EntityHelper.TrySetId(childA, GuidGenerator.Create);
-                        childA.ParentId = entity.Id;
-                        childA.IsModule = true;
-                        lstFunction.Add(childA);
-                        //foreach(var childB in childA.Children)
-                        //{
-                        //    EntityHelper.TrySetId(childB, GuidGenerator.Create);
-                        //    childB.ParentId = childA.Id;
-                        //    lstFunction.Add(childB);
-                        //    foreach (var childC in childB.Children)
-                        //    {
-                        //        EntityHelper.TrySetId(childC, GuidGenerator.Create);
-                        //        childC.ParentId = childB.Id;
-                        //        lstFunction.Add(childC);
-                        //    }
-                        //}
-                    }
-                }
-                //lstFunction.ForEach(x => x.Children = null);
+                var lstFunction = GetDataMultiLevel(request, entity);
                 await _repository.InsertManyAsync(lstFunction);
                 return result;
             }
@@ -112,29 +86,44 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Ứng dụng");
                     return result;
                 }
 
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, entity.IsModule ? "Tên ứng dụng" : "Tên chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên ứng dụng");
                     return result;
                 }
 
                 if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, entity.IsModule ? "Tên ứng dụng" : "Tên chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên ứng dụng");
                     return result;
                 }
-                base.MapToEntity(request, entity);
 
-                await _repository.UpdateAsync(entity);
+                //Find children multiple level then delete it
+                var lstFunctionOld = new List<Function>();
+
+                var lstFunctionChildA = _repository.GetByParentId(id);
+                var lstFunctionChildB = _repository.GetByParentIds(lstFunctionChildA.Select(x => x.Id).ToList());
+                var lstFunctionChildC = _repository.GetByParentIds(lstFunctionChildB.Select(x => x.Id).ToList());
+
+                lstFunctionOld.Add(entity);
+                lstFunctionOld.AddRange(lstFunctionChildA);
+                lstFunctionOld.AddRange(lstFunctionChildB);
+                lstFunctionOld.AddRange(lstFunctionChildC);
+                await _repository.DeleteManyAsync(lstFunctionOld, true);
+
+                //Insert data new
+                base.MapToEntity(request, entity);
+                var lstFunctionNew = GetDataMultiLevel(request, entity);
+                await _repository.InsertManyAsync(lstFunctionNew);
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.Data = false;
                 result.Message = ErrorMessages.PUT.CannotUpdate;
@@ -154,7 +143,7 @@ namespace Greenglobal.Core.Services
                 if (entity == null)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Ứng dụng");
                     return result;
                 }
                 entity.Status = -1;
@@ -177,7 +166,7 @@ namespace Greenglobal.Core.Services
             var result = new PageBaseResponse<FunctionResponse>();
             try
             {
-                var query = _repository.GetListFunction(request.Status);
+                var query = _repository.GetListFunction(request.Status, true, null);
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     query = _repository.SearchKeyword(query, request.Name);
@@ -191,7 +180,7 @@ namespace Greenglobal.Core.Services
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.Message = ErrorMessages.GET.GetFail;
                 result.Status = 400;
@@ -207,46 +196,10 @@ namespace Greenglobal.Core.Services
                 var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
                 if (entity == null)
                 {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Ứng dụng");
                     return result;
                 }
                 result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
-                //Get Function parent when this Function is child
-                //if (result.Data.ParentId.HasValue)
-                //{
-                //    result.Data.Parent = ObjectMapper.Map<Function, FunctionResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
-                //}
-
-                result.Message = ErrorMessages.GET.Getted;
-                return result;
-            }
-            catch (Exception)
-            {
-                result.Message = ErrorMessages.GET.GetFail;
-                result.Status = 400;
-                return result;
-            }
-        }
-
-        public async Task<BaseResponse<FunctionResponse>> GetByIdMultiLevelAync(Guid id)
-        {
-            var result = new BaseResponse<FunctionResponse>();
-            try
-            {
-                var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
-                if (entity == null)
-                {
-                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, entity.IsModule ? "Ứng dụng" : "Chức năng");
-                    return result;
-                }
-                result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
-                //Get Function parent when this Function is child
-                //if (result.Data.ParentId.HasValue)
-                //{
-                //    result.Data.Parent = ObjectMapper.Map<Function, FunctionResponse>(await _repository.GetAsync(result.Data.ParentId.Value));
-                //}
-                //Get Hierarchy Function children when this Function is parent
-                //else
                 result.Data.Children = await GetHierarchy(id);
 
                 result.Message = ErrorMessages.GET.Getted;
@@ -260,6 +213,12 @@ namespace Greenglobal.Core.Services
             }
         }
 
+        /// <summary>
+        /// Get data have children multi level for response
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         private async Task<List<FunctionResponse>> GetHierarchy(Guid id)
         {
             var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
@@ -271,6 +230,65 @@ namespace Greenglobal.Core.Services
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Get data have children multi level for entity to insert or update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private List<Function> GetDataMultiLevel(FunctionRequest request, Function entity)
+        {
+            var lstFunction = new List<Function>();
+            EntityHelper.TrySetId(entity, GuidGenerator.Create);
+            lstFunction.Add(entity);
+
+            if (request.Children != null && request.Children.Any())
+            {
+                int indexA = 0;
+                foreach (var childA in request.Children)
+                {
+                    var childAEntity = ObjectMapper.Map<FunctionRequest, Function>(childA);
+
+                    indexA++;
+                    EntityHelper.TrySetId(childAEntity, GuidGenerator.Create);
+                    childAEntity.ParentId = entity.Id;
+                    childAEntity.SortOrder = indexA;
+                    lstFunction.Add(childAEntity);
+                    if (childA.Children != null && childA.Children.Any())
+                    {
+                        int indexB = 0;
+                        foreach (var childB in childA.Children)
+                        {
+                            var childBEntity = ObjectMapper.Map<FunctionRequest, Function>(childB);
+
+                            indexB++;
+                            EntityHelper.TrySetId(childBEntity, GuidGenerator.Create);
+                            childBEntity.ParentId = childAEntity.Id;
+                            childBEntity.IsModule = false;
+                            childBEntity.SortOrder = indexB;
+                            lstFunction.Add(childBEntity);
+                            if (childB.Children != null && childB.Children.Any())
+                            {
+                                int indexC = 0;
+                                foreach (var childC in childB.Children)
+                                {
+                                    var childCEntity = ObjectMapper.Map<FunctionRequest, Function>(childC);
+
+                                    indexC++;
+                                    EntityHelper.TrySetId(childCEntity, GuidGenerator.Create);
+                                    childCEntity.ParentId = childBEntity.Id;
+                                    childCEntity.IsModule = false;
+                                    childCEntity.SortOrder = indexC;
+                                    lstFunction.Add(childCEntity);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return lstFunction;
         }
     }
 }

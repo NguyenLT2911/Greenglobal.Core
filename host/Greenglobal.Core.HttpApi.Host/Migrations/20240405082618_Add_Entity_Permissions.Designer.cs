@@ -98,7 +98,6 @@ namespace Greenglobal.Core.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("PathImage")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("SortOrder")

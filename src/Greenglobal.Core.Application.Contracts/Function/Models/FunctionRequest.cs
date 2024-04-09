@@ -6,7 +6,7 @@ namespace Greenglobal.Core.Models
     public class FunctionRequest
     {
         [JsonPropertyName("path_image")]
-        public string PathImage { get; set; }
+        public string? PathImage { get; set; }
 
         public string Code { get; set; }
 
