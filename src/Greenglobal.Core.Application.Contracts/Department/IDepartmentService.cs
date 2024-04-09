@@ -22,7 +22,7 @@ namespace Greenglobal.Core.Services
 
         Task<PageBaseResponse<DepartmentResponse>> GetListDepartmentAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
 
-        Task<BaseResponse<DepartmentResponse>> GetByIdAync(Guid id);
+        Task<BaseResponse<DepartmentResponse>> GetByIdAsync(Guid id);
 
         Task<BaseResponse<DepartmentResponse>> GetByIdMultiLevelAync(Guid id);
     }

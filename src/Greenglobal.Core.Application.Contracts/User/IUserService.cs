@@ -22,6 +22,6 @@ namespace Greenglobal.Core.Services
 
         Task<PageBaseResponse<UserResponse>> GetListUserAsync(PageBaseRequest pageRequest, SearchUserRequest request);
 
-        Task<BaseResponse<UserResponse>> GetByIdAync(Guid id);
+        Task<BaseResponse<UserResponse>> GetByIdAsync(Guid id);
     }
 }

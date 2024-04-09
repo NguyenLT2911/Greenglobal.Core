@@ -26,10 +26,13 @@ namespace Greenglobal.Core.Services
         IFunctionService
     {
         private readonly IFunctionRepository _repository;
+        private readonly IPermissionRepository _permissionRepository;
 
-        public FunctionService(IFunctionRepository repository) : base(repository)
+        public FunctionService(IFunctionRepository repository,
+            IPermissionRepository permissionRepository) : base(repository)
         {
             _repository = repository;
+            _permissionRepository = permissionRepository;
         }
 
         public async Task<BaseResponse<bool>> CreateFunctionAsync(FunctionRequest request)
@@ -188,7 +191,7 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<FunctionResponse>> GetByIdAync(Guid id)
+        public async Task<BaseResponse<FunctionResponse>> GetByIdAsync(Guid id)
         {
             var result = new BaseResponse<FunctionResponse>();
             try
@@ -201,6 +204,31 @@ namespace Greenglobal.Core.Services
                 }
                 result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
                 result.Data.Children = await GetHierarchy(id);
+
+                result.Message = ErrorMessages.GET.Getted;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = ErrorMessages.GET.GetFail;
+                result.Status = 400;
+                return result;
+            }
+        }
+
+        public async Task<BaseResponse<FunctionResponse>> GetHavePermissionByIdAsync(Guid id)
+        {
+            var result = new BaseResponse<FunctionResponse>();
+            try
+            {
+                var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
+                if (entity == null)
+                {
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Ứng dụng");
+                    return result;
+                }
+                result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
+                result.Data.Children = await GetHierarchyHavePermission(id);
 
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
@@ -289,6 +317,29 @@ namespace Greenglobal.Core.Services
                 }
             }
             return lstFunction;
+        }
+
+        /// <summary>
+        /// Get data have children multi level have permission for response
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private async Task<List<FunctionResponse>> GetHierarchyHavePermission(Guid id)
+        {
+            var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
+            if (result.Any())
+            {
+                var lstPermission = ObjectMapper.Map<List<Permission>, List<PermissionResponse>>
+                    (await AsyncExecuter.ToListAsync(_permissionRepository.GetByFunctionIds(result.Select(x => x.Id).ToList())));
+                foreach (var child in result)
+                {
+                    if (lstPermission != null && lstPermission.Any())
+                        child.Permissions = lstPermission.Where(per => per.FunctionId == child.Id).ToList();
+                    child.Children = await GetHierarchyHavePermission(child.Id);
+                }
+            }
+            return result;
         }
     }
 }
