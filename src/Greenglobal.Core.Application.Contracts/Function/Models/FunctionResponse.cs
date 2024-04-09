@@ -10,6 +10,11 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("parent_id")]
         public Guid? ParentId { get; set; }
 
+        [JsonPropertyName("path_image")]
+        public string? PathImage { get; set; }
+
+        public string Code { get; set; }
+
         public string Name { get; set; }
 
         [JsonPropertyName("is_module")]

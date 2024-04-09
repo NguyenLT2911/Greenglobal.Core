@@ -2,6 +2,7 @@
 using Greenglobal.Core.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
@@ -23,10 +24,12 @@ namespace Greenglobal.Core.Repositories
             return GetDbSetAsync().Result.Where(x => x.ParentId == parentId && (x.Status == 0 || x.Status == 1)).MaxAsync(x => (int?)x.SortOrder).Result ?? 0;
         }
 
-        public IQueryable<Function> GetListFunction(int? status)
+        public IQueryable<Function> GetListFunction(int? status, bool isModule, Guid? parentId)
         {
-            return GetDbSetAsync().Result.WhereIf(!status.HasValue, x => x.Status == 0 || x.Status == 1)
-                .WhereIf(status.HasValue && status.Value == -1, x => x.Status == -1)
+            return GetDbSetAsync().Result.WhereIf(!status.HasValue, x => (x.Status == 0 || x.Status == 1) 
+                && x.IsModule == isModule && x.ParentId == parentId)
+                .WhereIf(status.HasValue && status.Value == -1, x => x.Status == -1 && x.IsModule == isModule 
+                && x.ParentId == parentId)
                 .AsNoTracking();
         }
 
@@ -39,6 +42,12 @@ namespace Greenglobal.Core.Repositories
         {
             return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1)
             && x.ParentId.HasValue && x.ParentId.Value == parentId).AsNoTracking();
+        }
+
+        public IQueryable<Function> GetByParentIds(List<Guid> parentIds)
+        {
+            return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1)
+            && x.ParentId.HasValue && parentIds.Contains(x.ParentId.Value)).AsNoTracking();
         }
 
         public IQueryable<Function> GetById(Guid id)

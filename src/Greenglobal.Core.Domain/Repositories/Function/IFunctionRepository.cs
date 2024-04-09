@@ -1,5 +1,6 @@
 ﻿using Greenglobal.Core.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
@@ -12,11 +13,13 @@ namespace Greenglobal.Core.Repositories
 
         int GetMaxSortOrder(Guid? parentId);
 
-        IQueryable<Function> GetListFunction(int? status);
+        IQueryable<Function> GetListFunction(int? status, bool isModule, Guid? parentId);
 
         IQueryable<Function> SearchKeyword(IQueryable<Function> query, string keyword);
 
         IQueryable<Function> GetByParentId(Guid parentId);
+
+        IQueryable<Function> GetByParentIds(List<Guid> parentIds);
 
         IQueryable<Function> GetById(Guid id);
     }
