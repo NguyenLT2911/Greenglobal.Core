@@ -28,7 +28,7 @@ namespace Greenglobal.Core.Controllers
         [HttpGet, Route("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
-            var result = await _service.GetByIdAync(id);
+            var result = await _service.GetByIdAsync(id);
             if (result.Data == null)
                 return BadRequest(result);
             return Ok(result);

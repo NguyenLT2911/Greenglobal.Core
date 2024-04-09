@@ -22,6 +22,6 @@ namespace Greenglobal.Core.Services
 
         Task<PageBaseResponse<RoleResponse>> GetListRoleAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
 
-        Task<BaseResponse<RoleResponse>> GetByIdAync(Guid id);
+        Task<BaseResponse<RoleResponse>> GetByIdAsync(Guid id);
     }
 }

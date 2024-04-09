@@ -22,6 +22,8 @@ namespace Greenglobal.Core.Services
 
         Task<PageBaseResponse<FunctionResponse>> GetListFunctionAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
 
-        Task<BaseResponse<FunctionResponse>> GetByIdAync(Guid id);
+        Task<BaseResponse<FunctionResponse>> GetByIdAsync(Guid id);
+
+        Task<BaseResponse<FunctionResponse>> GetHavePermissionByIdAsync(Guid id);
     }
 }

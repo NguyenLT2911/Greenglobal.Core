@@ -15,11 +15,5 @@ namespace Greenglobal.Core.Services
             PermissionRequest>
     {
         Task<BaseResponse<bool>> CreatePermissionAsync(PermissionRequest request);
-
-        Task<BaseResponse<bool>> UpdatePermissionAsync(Guid id, PermissionRequest request);
-
-        Task<PageBaseResponse<PermissionResponse>> GetListPermissionAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
-
-        Task<BaseResponse<PermissionResponse>> GetByIdAync(Guid id);
     }
 }

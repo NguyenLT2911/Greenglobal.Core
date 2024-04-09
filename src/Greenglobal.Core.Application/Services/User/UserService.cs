@@ -304,7 +304,7 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        public async Task<BaseResponse<UserResponse>> GetByIdAync(Guid id)
+        public async Task<BaseResponse<UserResponse>> GetByIdAsync(Guid id)
         {
             var result = new BaseResponse<UserResponse>();
             try
