@@ -26,6 +26,9 @@ namespace Greenglobal.Core.Entities
         public string? AvatarPath { get; set; }
 
         [Required]
+        public bool AllowLogin { get; set; }
+
+        [Required]
         public int SortOrder { get; set; }
 
         [MaxLength(300)]

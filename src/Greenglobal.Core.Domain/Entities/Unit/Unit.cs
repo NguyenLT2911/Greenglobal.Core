@@ -11,6 +11,9 @@ namespace Greenglobal.Core.Entities
         [Required, MaxLength(100)]
         public string Name { get; set; }
 
+        [Required, MaxLength(30)]
+        public string ShortName { get; set; }
+
         [Required]
         public int SortOrder { get; set; }
 

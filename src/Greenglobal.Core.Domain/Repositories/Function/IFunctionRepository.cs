@@ -9,7 +9,9 @@ namespace Greenglobal.Core.Repositories
 {
     public interface IFunctionRepository : IRepository<Function, Guid>
     {
-        Task<bool> IsDupplicationName(string name);
+        Task<bool> IsDupplicationName(string name, Guid? parentId, Guid applicationId);
+
+        Task<bool> IsDupplicationCode(string code, Guid? parentId, Guid applicationId);
 
         int GetMaxSortOrder(Guid? parentId);
 

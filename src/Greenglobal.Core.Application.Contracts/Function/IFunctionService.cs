@@ -20,10 +20,10 @@ namespace Greenglobal.Core.Services
 
         Task<BaseResponse<bool>> DeleteFunctionAsync(Guid id);
 
-        Task<PageBaseResponse<FunctionResponse>> GetListFunctionAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
+        //Task<PageBaseResponse<FunctionResponse>> GetListFunctionAsync(PageBaseRequest pageRequest, SearchBaseRequest request);
 
         Task<BaseResponse<FunctionResponse>> GetByIdAsync(Guid id);
 
-        Task<BaseResponse<FunctionResponse>> GetHavePermissionByIdAsync(Guid id);
+        //Task<BaseResponse<FunctionResponse>> GetHavePermissionByIdAsync(Guid id);
     }
 }

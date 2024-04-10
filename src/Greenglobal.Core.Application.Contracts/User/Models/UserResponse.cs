@@ -43,10 +43,10 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("updated_name")]
         public string? UpdatedName { get; set; }
 
-        public RoleResponse? Role { get; set; }
+        public TitleResponse? Title { get; set; }
 
         public DepartmentResponse? Department { get; set; }
 
-        public List<UserRoleDeptResponse>? UserRoleDepts { get; set; }
+        public List<UserTitleDeptResponse>? UserRoleDepts { get; set; }
     }
 }

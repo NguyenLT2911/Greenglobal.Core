@@ -79,10 +79,10 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (request.RoleId == Guid.Empty)
+                if (request.TitleId == Guid.Empty)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Chức vụ");
                     return result;
                 }
 
@@ -116,16 +116,16 @@ namespace Greenglobal.Core.Services
                 //HashPassword
                 entity.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-                var lstUserRole = new List<UserRoleDept>();
+                var lstUserRole = new List<UserTitleDept>();
                 //Set Role main
-                var userRoleMain = new UserRoleDept();
+                var userRoleMain = new UserTitleDept();
                 userRoleMain.DepartmentId = request.DepartmentId;
-                userRoleMain.RoleId = request.RoleId;
+                userRoleMain.TitleId = request.TitleId;
                 userRoleMain.IsMain = true;
                 lstUserRole.Add(userRoleMain);
                 //Set role not main
                 if (request.Concurrent != null && request.Concurrent.Any())
-                    lstUserRole.AddRange(ObjectMapper.Map<List<UserRoleDeptRequest>, List<UserRoleDept>>(request.Concurrent));
+                    lstUserRole.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
                 lstUserRole.ForEach(x => x.UserId = entity.Id);
 
                 await _repository.InsertAsync(entity);
@@ -185,10 +185,10 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (request.RoleId == Guid.Empty)
+                if (request.TitleId == Guid.Empty)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Chức vụ");
                     return result;
                 }
 
@@ -211,16 +211,16 @@ namespace Greenglobal.Core.Services
                 entity.SortOrder = maxSortOrder++;
                 entity.UpdatedAt = DateTime.UtcNow;
 
-                var lstUserRole = new List<UserRoleDept>();
+                var lstUserRole = new List<UserTitleDept>();
                 //Set Role main
-                var userRoleMain = new UserRoleDept();
+                var userRoleMain = new UserTitleDept();
                 userRoleMain.DepartmentId = request.DepartmentId;
-                userRoleMain.RoleId = request.RoleId;
+                userRoleMain.TitleId = request.TitleId;
                 userRoleMain.IsMain = true;
                 lstUserRole.Add(userRoleMain);
                 //Set role not main
                 if (request.Concurrent != null && request.Concurrent.Any())
-                    lstUserRole.AddRange(ObjectMapper.Map<List<UserRoleDeptRequest>, List<UserRoleDept>>(request.Concurrent));
+                    lstUserRole.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
                 lstUserRole.ForEach(x => x.UserId = entity.Id);
 
                 //Delete roles old
@@ -316,14 +316,14 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
                 result.Data = ObjectMapper.Map<User, UserResponse>(entity);
-                var lstUserRoleDepts = ObjectMapper.Map<List<UserRoleDept>, List<UserRoleDeptResponse>>
+                var lstUserRoleDepts = ObjectMapper.Map<List<UserTitleDept>, List<UserTitleDeptResponse>>
                     (await AsyncExecuter.ToListAsync(_userRoleDeptRepository.GetByUserId(id)));
                 if (lstUserRoleDepts.Any())
                 {
                     var userRoleMain = lstUserRoleDepts.FirstOrDefault(x => x.IsMain);
                     if (userRoleMain != null)
                     {
-                        result.Data.Role = userRoleMain.Role;
+                        result.Data.Title = userRoleMain.Title;
                         result.Data.Department = userRoleMain.Department;
                     }
                     result.Data.UserRoleDepts = lstUserRoleDepts.Where(x => !x.IsMain).ToList();

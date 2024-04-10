@@ -24,6 +24,55 @@ namespace Greenglobal.Core.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Greenglobal.Core.Entities.Application", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("IconPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applications", "auth");
+                });
+
             modelBuilder.Entity("Greenglobal.Core.Entities.Department", b =>
                 {
                     b.Property<Guid>("Id")
@@ -44,6 +93,11 @@ namespace Greenglobal.Core.Migrations
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
@@ -138,6 +192,9 @@ namespace Greenglobal.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -170,10 +227,12 @@ namespace Greenglobal.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationId");
+
                     b.ToTable("Roles", "auth");
                 });
 
-            modelBuilder.Entity("Greenglobal.Core.Entities.Unit", b =>
+            modelBuilder.Entity("Greenglobal.Core.Entities.Title", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,6 +268,50 @@ namespace Greenglobal.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Titles", "auth");
+                });
+
+            modelBuilder.Entity("Greenglobal.Core.Entities.Unit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
                     b.ToTable("Units", "auth");
                 });
 
@@ -217,6 +320,9 @@ namespace Greenglobal.Core.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("AllowLogin")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("AvatarPath")
                         .HasMaxLength(300)
@@ -270,13 +376,13 @@ namespace Greenglobal.Core.Migrations
                     b.ToTable("Users", "auth");
                 });
 
-            modelBuilder.Entity("Greenglobal.Core.Entities.UserRoleDept", b =>
+            modelBuilder.Entity("Greenglobal.Core.Entities.UserRoleApp", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid>("ApplicationId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsMain")
@@ -290,13 +396,42 @@ namespace Greenglobal.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRoleDepts", "auth");
+                    b.ToTable("UserRoleApps", "auth");
+                });
+
+            modelBuilder.Entity("Greenglobal.Core.Entities.UserTitleDept", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("TitleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("TitleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTitleDepts", "auth");
                 });
 
             modelBuilder.Entity("Greenglobal.Core.Entities.Department", b =>
@@ -329,11 +464,22 @@ namespace Greenglobal.Core.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Greenglobal.Core.Entities.UserRoleDept", b =>
+            modelBuilder.Entity("Greenglobal.Core.Entities.Role", b =>
                 {
-                    b.HasOne("Greenglobal.Core.Entities.Department", "Department")
+                    b.HasOne("Greenglobal.Core.Entities.Application", "Application")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("Greenglobal.Core.Entities.UserRoleApp", b =>
+                {
+                    b.HasOne("Greenglobal.Core.Entities.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -349,9 +495,36 @@ namespace Greenglobal.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("Application");
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Greenglobal.Core.Entities.UserTitleDept", b =>
+                {
+                    b.HasOne("Greenglobal.Core.Entities.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Greenglobal.Core.Entities.Title", "Title")
+                        .WithMany()
+                        .HasForeignKey("TitleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Greenglobal.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Title");
 
                     b.Navigation("User");
                 });

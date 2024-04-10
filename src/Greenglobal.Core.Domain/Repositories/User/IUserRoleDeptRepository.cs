@@ -5,9 +5,9 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Greenglobal.Core.Repositories
 {
-    public interface IUserRoleDeptRepository : IRepository<UserRoleDept, Guid>
+    public interface IUserRoleDeptRepository : IRepository<UserTitleDept, Guid>
     {
-        IQueryable<UserRoleDept> GetByUserId(Guid userId, bool haveIncludeMany = true);
+        IQueryable<UserTitleDept> GetByUserId(Guid userId, bool haveIncludeMany = true);
 
         IQueryable<Guid> GetByDepartmentId(Guid departmentId);
     }

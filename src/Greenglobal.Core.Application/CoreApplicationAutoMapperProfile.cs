@@ -21,13 +21,16 @@ public class CoreApplicationAutoMapperProfile : Profile
         CreateMap<User, UserResponse>().IgnoreAllNonExisting();
         CreateMap<UserRequest, User>(MemberList.Source).IgnoreAllNonExisting();
 
+        CreateMap<Title, TitleResponse>().IgnoreAllNonExisting();
+        CreateMap<TitleRequest, Title>(MemberList.Source).IgnoreAllNonExisting();
+
         CreateMap<Role, RoleResponse>().IgnoreAllNonExisting();
         CreateMap<RoleRequest, Role>(MemberList.Source).IgnoreAllNonExisting();
 
         CreateMap<Permission, PermissionResponse>().IgnoreAllNonExisting();
         CreateMap<PermissionRequest, Permission>(MemberList.Source).IgnoreAllNonExisting();
 
-        CreateMap<UserRoleDept, UserRoleDeptResponse>().IgnoreAllNonExisting();
-        CreateMap<UserRoleDeptRequest, UserRoleDept>(MemberList.Source).IgnoreAllNonExisting();
+        CreateMap<UserTitleDept, UserTitleDeptResponse>().IgnoreAllNonExisting();
+        CreateMap<UserTitleDeptRequest, UserTitleDept>(MemberList.Source).IgnoreAllNonExisting();
     }
 }

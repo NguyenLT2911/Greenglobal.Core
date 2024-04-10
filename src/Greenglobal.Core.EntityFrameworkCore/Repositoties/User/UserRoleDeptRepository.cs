@@ -9,17 +9,17 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Greenglobal.Core.Repositories
 {
-    public class UserRoleDeptRepository : EfCoreRepository<CoreDbContext, UserRoleDept, Guid>, IUserRoleDeptRepository
+    public class UserRoleDeptRepository : EfCoreRepository<CoreDbContext, UserTitleDept, Guid>, IUserRoleDeptRepository
     {
         public UserRoleDeptRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
 
-        public IQueryable<UserRoleDept> GetByUserId(Guid userId, bool haveIncludeMany)
+        public IQueryable<UserTitleDept> GetByUserId(Guid userId, bool haveIncludeMany)
         {
             var query = GetDbSetAsync().Result.Where(x => x.UserId == userId)
                 .AsNoTracking();
             if (haveIncludeMany)
                 query = query
-                    .Include(x => x.Role)
+                    .Include(x => x.Title)
                     .Include(x => x.Department).ThenInclude(x => x.Unit)
                     .AsNoTracking();
             return query;

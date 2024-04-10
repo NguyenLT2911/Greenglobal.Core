@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
-    public class UserRoleDeptRequest
+    public class UserTitleDeptRequest
     {
-        [JsonPropertyName("role_id")]
-        public Guid RoleId { get; set; }
+        [JsonPropertyName("title_id")]
+        public Guid TitleId { get; set; }
 
         [JsonPropertyName("department_id")]
         public Guid DepartmentId { get; set; }

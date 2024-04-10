@@ -25,5 +25,10 @@ namespace Greenglobal.Core.Models
 
         [JsonPropertyName("updated_name")]
         public string? UpdatedName { get; set; }
+
+        [JsonPropertyName("apllication_id")]
+        public Guid ApplicationId { get; set; }
+
+        public ApplicationResponse Application { get; set; }
     }
 }

@@ -32,9 +32,9 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("department_id")]
         public Guid DepartmentId { get; set; }
         
-        [JsonPropertyName("role_id")]
-        public Guid RoleId { get; set; }
+        [JsonPropertyName("title_id")]
+        public Guid TitleId { get; set; }
 
-        public List<UserRoleDeptRequest>? Concurrent { get; set; }
+        public List<UserTitleDeptRequest>? Concurrent { get; set; }
     }
 }

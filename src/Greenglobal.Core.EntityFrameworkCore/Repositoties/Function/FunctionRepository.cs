@@ -14,9 +14,14 @@ namespace Greenglobal.Core.Repositories
     {
         public FunctionRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
 
-        public Task<bool> IsDupplicationName(string name)
+        public Task<bool> IsDupplicationName(string name, Guid? parentId, Guid applicationId)
         {
-            return GetDbSetAsync().Result.AnyAsync(x => x.Name == name);
+            return GetDbSetAsync().Result.AnyAsync(x => x.Name == name && x.ParentId == parentId && x.ApplicationId == applicationId);
+        }
+
+        public Task<bool> IsDupplicationCode(string code, Guid? parentId, Guid applicationId)
+        {
+            return GetDbSetAsync().Result.AnyAsync(x => x.Code == code && x.ParentId == parentId && x.ApplicationId == applicationId);
         }
 
         public int GetMaxSortOrder(Guid? parentId)

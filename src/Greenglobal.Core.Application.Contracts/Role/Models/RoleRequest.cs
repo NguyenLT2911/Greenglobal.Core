@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
@@ -14,5 +15,8 @@ namespace Greenglobal.Core.Models
         public string? Description { get; set; }
 
         public int Status { get; set; } = 1;
+
+        [JsonPropertyName("apllication_id")]
+        public Guid ApplicationId { get; set; }
     }
 }
