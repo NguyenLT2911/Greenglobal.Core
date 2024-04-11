@@ -10,13 +10,11 @@ namespace Greenglobal.Core.Models
         /// <summary>
         /// Number of page
         /// </summary>
-        [JsonPropertyName("page_number")]
         public int PageNumber { get; set; }
 
         /// <summary>
         /// Size of page
         /// </summary>
-        [JsonPropertyName("page_size")]
         public int PageSize { get; set; } = int.MaxValue;
     }
 }

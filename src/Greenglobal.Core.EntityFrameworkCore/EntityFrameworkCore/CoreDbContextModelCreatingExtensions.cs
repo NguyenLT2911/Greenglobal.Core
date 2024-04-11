@@ -45,9 +45,9 @@ public static class CoreDbContextModelCreatingExtensions
             b.ConfigureByConvention();
         });
 
-        builder.Entity<UserRoleDept>(b =>
+        builder.Entity<UserTitleDept>(b =>
         {
-            b.ToTable(options.TablePrefix + "UserRoleDepts", CoreDbProperties.DbSchemaAuth);
+            b.ToTable(options.TablePrefix + "UserTitleDepts", CoreDbProperties.DbSchemaAuth);
             b.ConfigureByConvention();
         });
 
@@ -60,6 +60,24 @@ public static class CoreDbContextModelCreatingExtensions
         builder.Entity<Permission>(b =>
         {
             b.ToTable(options.TablePrefix + "Permissions", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Title>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Titles", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Application>(b =>
+        {
+            b.ToTable(options.TablePrefix + "Applications", CoreDbProperties.DbSchemaAuth);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<UserRoleApp>(b =>
+        {
+            b.ToTable(options.TablePrefix + "UserRoleApps", CoreDbProperties.DbSchemaAuth);
             b.ConfigureByConvention();
         });
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp.Domain.Entities;
 
 
@@ -12,6 +13,9 @@ namespace Greenglobal.Core.Entities
 
         [Required, MaxLength(50)]
         public string Code { get; set; }
+
+        [Required]
+        public Guid ApplicationId { get; set; }
 
         [Required]
         public int SortOrder { get; set; }
@@ -29,5 +33,8 @@ namespace Greenglobal.Core.Entities
 
         [MaxLength(100)]
         public string? UpdatedName { get; set; }
+
+        [ForeignKey("ApplicationId")]
+        public Application Application { get; set; }
     }
 }

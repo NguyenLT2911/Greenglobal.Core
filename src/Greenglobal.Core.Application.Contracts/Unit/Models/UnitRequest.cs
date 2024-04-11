@@ -8,6 +8,9 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("parent_id")]
         public Guid? ParentId { get; set; }
 
+        [JsonPropertyName("short_name")]
+        public string ShortNamne { get; set; }
+
         public string Name { get; set; }
 
         [JsonPropertyName("sort_order")]

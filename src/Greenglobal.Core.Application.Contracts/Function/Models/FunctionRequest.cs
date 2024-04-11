@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace Greenglobal.Core.Models
 {
     public class FunctionRequest
     {
+        [JsonPropertyName("parent_id")]
+        public Guid? ParentId { get; set; }
+
         [JsonPropertyName("path_image")]
         public string? PathImage { get; set; }
 
@@ -22,6 +25,7 @@ namespace Greenglobal.Core.Models
 
         public int Status { get; set; }
 
-        public List<FunctionRequest>? Children { get; set; }
+        [JsonPropertyName("application_id")]
+        public Guid ApplicationId { get; set; }
     }
 }

@@ -22,6 +22,5 @@ namespace Greenglobal.Core.Entities
 
         [ForeignKey("FunctionId")]
         public Function Function { get; set; }
-
     }
 }

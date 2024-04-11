@@ -6,7 +6,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace Greenglobal.Core.Entities
 {
-    public class UserRoleDept : Entity<Guid>
+    public class UserRoleApp : Entity<Guid>
     {
         [Required]
         public Guid UserId { get; set; }
@@ -15,18 +15,18 @@ namespace Greenglobal.Core.Entities
         public Guid RoleId { get; set; }
 
         [Required]
-        public Guid DepartmentId { get; set; }
+        public Guid ApplicationId { get; set; }
 
         [Required]
         public bool IsMain { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [ForeignKey("RoleId")]
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
 
-        [ForeignKey("DepartmentId")]
-        public Department Department { get; set; }
+        [ForeignKey("ApplicationId")]
+        public Application? Application { get; set; }
     }
 }

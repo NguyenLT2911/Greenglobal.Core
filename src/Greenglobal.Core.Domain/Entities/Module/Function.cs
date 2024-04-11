@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp.Domain.Entities;
 
 namespace Greenglobal.Core.Entities
@@ -8,6 +8,9 @@ namespace Greenglobal.Core.Entities
     public class Function : Entity<Guid>
     {
         public Guid? ParentId { get; set; }
+
+        [Required, MaxLength(50)]
+        public string Code { get; set; }
 
         [Required, MaxLength(100)]
         public string? Name { get; set; }
@@ -26,7 +29,9 @@ namespace Greenglobal.Core.Entities
 
         public string? PathImage { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Code { get; set; }
+        public Guid ApplicationId { get; set; }
+
+        [ForeignKey("ApplicationId")]
+        public Application Application { get; set; }
     }
 }

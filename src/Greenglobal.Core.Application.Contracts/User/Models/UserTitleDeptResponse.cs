@@ -4,13 +4,13 @@ using Volo.Abp.Application.Dtos;
 
 namespace Greenglobal.Core.Models
 {
-    public class UserRoleDeptResponse : EntityDto<Guid>
+    public class UserTitleDeptResponse : EntityDto<Guid>
     {
         [JsonPropertyName("user_id")]
         public Guid UserId { get; set; }
 
-        [JsonPropertyName("role_id")]
-        public Guid RoleId { get; set; }
+        [JsonPropertyName("title_id")]
+        public Guid TitleId { get; set; }
 
         [JsonPropertyName("department_id")]
         public Guid DepartmentId { get; set; }
@@ -20,7 +20,7 @@ namespace Greenglobal.Core.Models
 
         public UserResponse User { get; set; }
 
-        public RoleResponse Role { get; set; }
+        public TitleResponse Title { get; set; }
 
         public DepartmentResponse Department { get; set; }
     }

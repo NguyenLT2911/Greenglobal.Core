@@ -14,9 +14,14 @@ namespace Greenglobal.Core.Repositories
     {
         public FunctionRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
 
-        public Task<bool> IsDupplicationName(string name)
+        public Task<bool> IsDupplicationName(string name, Guid? parentId, Guid applicationId)
         {
-            return GetDbSetAsync().Result.AnyAsync(x => x.Name == name);
+            return GetDbSetAsync().Result.AnyAsync(x => x.Name == name && x.ParentId == parentId && x.ApplicationId == applicationId);
+        }
+
+        public Task<bool> IsDupplicationCode(string code, Guid? parentId, Guid applicationId)
+        {
+            return GetDbSetAsync().Result.AnyAsync(x => x.Code == code && x.ParentId == parentId && x.ApplicationId == applicationId);
         }
 
         public int GetMaxSortOrder(Guid? parentId)
@@ -53,6 +58,11 @@ namespace Greenglobal.Core.Repositories
         public IQueryable<Function> GetById(Guid id)
         {
             return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1) && x.Id == id).AsNoTracking();
+        }
+
+        public IQueryable<Function> GetByApplicationId(Guid applicationId)
+        {
+            return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1) && x.ApplicationId == applicationId).AsNoTracking();
         }
     }
 }

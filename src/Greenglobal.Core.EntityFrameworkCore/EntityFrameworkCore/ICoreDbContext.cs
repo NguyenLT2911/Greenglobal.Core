@@ -16,9 +16,15 @@ public interface ICoreDbContext : IEfCoreDbContext
 
     public DbSet<User> Users { get; set; }
 
-    public DbSet<UserRoleDept> UserRoleDepts { get; set; }
+    public DbSet<UserTitleDept> UserTitleDepts { get; set; }
 
     public DbSet<Function> Functions { get; set; }
 
     public DbSet<Permission> Permissions { get; set; }
+
+    public DbSet<Title> Titles { get; set; }
+
+    public DbSet<Application> Applications { get; set; }
+
+    public DbSet<UserRoleApp> UserRoleApps { get; set; }
 }

@@ -47,6 +47,13 @@ namespace Greenglobal.Core.Services
                 result.Data = true;
                 result.Message = ErrorMessages.POST.Created;
 
+                if (string.IsNullOrEmpty(request.ShortNamne))
+                {
+                    result.Data = false;
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên viết tắt đơn vị");
+                    return result;
+                }
+
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     result.Data = false;
@@ -92,6 +99,13 @@ namespace Greenglobal.Core.Services
                 {
                     result.Data = false;
                     result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Đơn vị");
+                    return result;
+                }
+
+                if (string.IsNullOrEmpty(request.ShortNamne))
+                {
+                    result.Data = false;
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Tên viết tắt đơn vị");
                     return result;
                 }
 

@@ -16,6 +16,9 @@ namespace Greenglobal.Core.Models
 
         public string? Email { get; set; }
 
+        [JsonPropertyName("allow_login")]
+        public bool AllowLogin { get; set; }
+
         [JsonPropertyName("phone_number")]
         public string? PhoneNumber { get; set; }
 
@@ -32,9 +35,11 @@ namespace Greenglobal.Core.Models
         [JsonPropertyName("department_id")]
         public Guid DepartmentId { get; set; }
         
-        [JsonPropertyName("role_id")]
-        public Guid RoleId { get; set; }
+        [JsonPropertyName("title_id")]
+        public Guid TitleId { get; set; }
 
-        public List<UserRoleDeptRequest>? Concurrent { get; set; }
+        public List<UserTitleDeptRequest>? Concurrent { get; set; }
+
+        public List<UserRoleAppRequest>? UserRoleApps { get; set; }
     }
 }

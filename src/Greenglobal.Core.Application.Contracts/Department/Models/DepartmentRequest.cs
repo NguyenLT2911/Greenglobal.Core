@@ -13,6 +13,9 @@ namespace Greenglobal.Core.Models
 
         public string Name { get; set; }
 
+        [JsonPropertyName("short_name")]
+        public string ShortNamne { get; set; }
+
         [JsonPropertyName("sort_order")]
         public int SortOrder { get; set; }
 

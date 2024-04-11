@@ -40,10 +40,10 @@ namespace Greenglobal.Core.Services
                 result.Data = true;
                 result.Message = ErrorMessages.POST.Created;
 
-                if (string.IsNullOrEmpty(request.Code))
+                if (request.ApplicationId == Guid.Empty)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Mã vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Ứng dụg");
                     return result;
                 }
 
@@ -54,17 +54,10 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (await _repository.IsDupplicationCode(request.Code))
+                if (await _repository.IsDupplication(request.Name, request.ApplicationId))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Mã vai trò");
-                    return result;
-                }
-
-                if (await _repository.IsDupplicationName(request.Name))
-                {
-                    result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Ứng dụng và Vai trò");
                     return result;
                 }
 
@@ -103,10 +96,10 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (string.IsNullOrEmpty(request.Code))
+                if (request.ApplicationId == Guid.Empty)
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Mã vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.RequiredField, "Ứng dụg");
                     return result;
                 }
 
@@ -117,17 +110,11 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
 
-                if (request.Code != entity?.Code && await _repository.IsDupplicationCode(request.Code))
+                if (request.Name != entity?.Name && request.ApplicationId != entity.ApplicationId
+                    && await _repository.IsDupplication(request.Name, request.ApplicationId))
                 {
                     result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Mã vai trò");
-                    return result;
-                }
-
-                if (request.Name != entity?.Name && await _repository.IsDupplicationName(request.Name))
-                {
-                    result.Data = false;
-                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Tên vai trò");
+                    result.Message = string.Format(ErrorMessages.VALID.Existed, "Ứng dụng và Vai trò");
                     return result;
                 }
 
