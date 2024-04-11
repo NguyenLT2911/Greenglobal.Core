@@ -16,14 +16,14 @@ namespace Greenglobal.Core.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetListAsync(PageBaseRequest pageRequest, SearchBaseRequest request)
-        {
-            var result = await _service.GetListFunctionAsync(pageRequest, request);
-            if (result.Data == null)
-                return BadRequest(result);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetListAsync(PageBaseRequest pageRequest, SearchBaseRequest request)
+        //{
+        //    var result = await _service.GetListFunctionAsync(pageRequest, request);
+        //    if (result.Data == null)
+        //        return BadRequest(result);
+        //    return Ok(result);
+        //}
 
         [HttpGet, Route("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
@@ -34,14 +34,14 @@ namespace Greenglobal.Core.Controllers
             return Ok(result);
         }
 
-        [HttpGet, Route("{id}/multilevel")]
-        public async Task<IActionResult> GetHavePermissionAsync(Guid id)
-        {
-            var result = await _service.GetHavePermissionByIdAsync(id);
-            if (result.Data == null)
-                return BadRequest(result);
-            return Ok(result);
-        }
+        //[HttpGet, Route("{id}/multilevel")]
+        //public async Task<IActionResult> GetHavePermissionAsync(Guid id)
+        //{
+        //    var result = await _service.GetHavePermissionByIdAsync(id);
+        //    if (result.Data == null)
+        //        return BadRequest(result);
+        //    return Ok(result);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] FunctionRequest request)

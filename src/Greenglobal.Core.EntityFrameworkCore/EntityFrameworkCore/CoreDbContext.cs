@@ -16,7 +16,7 @@ public class CoreDbContext : AbpDbContext<CoreDbContext>, ICoreDbContext
 
     public DbSet<User> Users { get; set; }
 
-    public DbSet<UserTitleDept> UserRoleDepts { get; set; }
+    public DbSet<UserTitleDept> UserTitleDepts { get; set; }
 
     public DbSet<Function> Functions { get; set; }
 

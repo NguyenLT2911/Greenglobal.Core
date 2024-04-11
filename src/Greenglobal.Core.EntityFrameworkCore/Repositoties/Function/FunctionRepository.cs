@@ -59,5 +59,10 @@ namespace Greenglobal.Core.Repositories
         {
             return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1) && x.Id == id).AsNoTracking();
         }
+
+        public IQueryable<Function> GetByApplicationId(Guid applicationId)
+        {
+            return GetDbSetAsync().Result.Where(x => (x.Status == 0 || x.Status == 1) && x.ApplicationId == applicationId).AsNoTracking();
+        }
     }
 }

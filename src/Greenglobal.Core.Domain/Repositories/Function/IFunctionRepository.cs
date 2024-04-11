@@ -24,5 +24,7 @@ namespace Greenglobal.Core.Repositories
         IQueryable<Function> GetByParentIds(List<Guid> parentIds);
 
         IQueryable<Function> GetById(Guid id);
+
+        IQueryable<Function> GetByApplicationId(Guid applicationId);
     }
 }

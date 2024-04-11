@@ -12,6 +12,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.ObjectMapping;
 
 namespace Greenglobal.Core.Services
 {
@@ -27,13 +28,16 @@ namespace Greenglobal.Core.Services
         IUserService
     {
         private readonly IUserRepository _repository;
-        private readonly IUserRoleDeptRepository _userRoleDeptRepository;
+        private readonly IUserTitleRepository _userTitleDeptRepository;
+        private readonly IUserRoleAppRepository _userRoleAppRepository;
 
         public UserService(IUserRepository repository,
-            IUserRoleDeptRepository userRoleDeptRepository) : base(repository)
+            IUserTitleRepository userTitleDeptRepository,
+            IUserRoleAppRepository userRoleAppRepository) : base(repository)
         {
             _repository = repository;
-            _userRoleDeptRepository = userRoleDeptRepository;
+            _userTitleDeptRepository = userTitleDeptRepository;
+            _userRoleAppRepository = userRoleAppRepository;
         }
 
         public async Task<BaseResponse<bool>> CreateUserAsync(UserRequest request)
@@ -44,6 +48,7 @@ namespace Greenglobal.Core.Services
                 result.Data = true;
                 result.Message = ErrorMessages.POST.Created;
 
+                #region Valid request
                 if (string.IsNullOrEmpty(request.FullName))
                 {
                     result.Data = false;
@@ -106,6 +111,7 @@ namespace Greenglobal.Core.Services
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Email");
                     return result;
                 }
+                #endregion
 
                 var maxSortOrder = _repository.GetMaxSortOrder();
                 maxSortOrder += 1;
@@ -116,23 +122,30 @@ namespace Greenglobal.Core.Services
                 //HashPassword
                 entity.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-                var lstUserRole = new List<UserTitleDept>();
-                //Set Role main
-                var userRoleMain = new UserTitleDept();
-                userRoleMain.DepartmentId = request.DepartmentId;
-                userRoleMain.TitleId = request.TitleId;
-                userRoleMain.IsMain = true;
-                lstUserRole.Add(userRoleMain);
-                //Set role not main
+                var lstUserTitle = new List<UserTitleDept>();
+                //Set Title main
+                var userTitleMain = new UserTitleDept();
+                userTitleMain.DepartmentId = request.DepartmentId;
+                userTitleMain.TitleId = request.TitleId;
+                userTitleMain.IsMain = true;
+                lstUserTitle.Add(userTitleMain);
+                //Set Title not main
                 if (request.Concurrent != null && request.Concurrent.Any())
-                    lstUserRole.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
-                lstUserRole.ForEach(x => x.UserId = entity.Id);
+                    lstUserTitle.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
+                lstUserTitle.ForEach(x => x.UserId = entity.Id);
+
+                //Set List User use App with Role
+                var lstUserRoleApp = new List<UserRoleApp>();
+                if (request.UserRoleApps != null && request.UserRoleApps.Any())
+                    lstUserRoleApp.AddRange(ObjectMapper.Map<List<UserRoleAppRequest>, List<UserRoleApp>>(request.UserRoleApps));
+                lstUserRoleApp.ForEach(x => x.UserId = entity.Id);
 
                 await _repository.InsertAsync(entity);
-                await _userRoleDeptRepository.InsertManyAsync(lstUserRole, true);
+                await _userTitleDeptRepository.InsertManyAsync(lstUserTitle, true);
+                await _userRoleAppRepository.InsertManyAsync(lstUserRoleApp, true);
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result.Data = false;
                 result.Message = ErrorMessages.POST.CannotCreate;
@@ -148,8 +161,9 @@ namespace Greenglobal.Core.Services
             {
                 result.Data = true;
                 result.Message = ErrorMessages.PUT.Updated;
-
                 var entity = await _repository.GetAsync(id);
+
+                #region Valid request
                 if (string.IsNullOrEmpty(request.FullName))
                 {
                     result.Data = false;
@@ -205,29 +219,44 @@ namespace Greenglobal.Core.Services
                     result.Message = string.Format(ErrorMessages.VALID.Existed, "Email");
                     return result;
                 }
+                #endregion
 
                 var maxSortOrder = _repository.GetMaxSortOrder();
                 base.MapToEntity(request, entity);
                 entity.SortOrder = maxSortOrder++;
                 entity.UpdatedAt = DateTime.UtcNow;
 
-                var lstUserRole = new List<UserTitleDept>();
-                //Set Role main
-                var userRoleMain = new UserTitleDept();
-                userRoleMain.DepartmentId = request.DepartmentId;
-                userRoleMain.TitleId = request.TitleId;
-                userRoleMain.IsMain = true;
-                lstUserRole.Add(userRoleMain);
-                //Set role not main
+                var lstUserTitle = new List<UserTitleDept>();
+                //Set Title main
+                var userTitleMain = new UserTitleDept();
+                userTitleMain.DepartmentId = request.DepartmentId;
+                userTitleMain.TitleId = request.TitleId;
+                userTitleMain.IsMain = true;
+                lstUserTitle.Add(userTitleMain);
+                //Set Title not main
                 if (request.Concurrent != null && request.Concurrent.Any())
-                    lstUserRole.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
-                lstUserRole.ForEach(x => x.UserId = entity.Id);
+                    lstUserTitle.AddRange(ObjectMapper.Map<List<UserTitleDeptRequest>, List<UserTitleDept>>(request.Concurrent));
+                lstUserTitle.ForEach(x => x.UserId = entity.Id);
 
-                //Delete roles old
-                var lstUserRoleOld = _userRoleDeptRepository.GetByUserId(id, false);
-                await _userRoleDeptRepository.DeleteManyAsync(lstUserRoleOld);
-                //Insert role new
-                await _userRoleDeptRepository.InsertManyAsync(lstUserRole);
+                //Set List User use App with Role
+                var lstUserRoleApp = new List<UserRoleApp>();
+                if (request.UserRoleApps != null && request.UserRoleApps.Any())
+                    lstUserRoleApp.AddRange(ObjectMapper.Map<List<UserRoleAppRequest>, List<UserRoleApp>>(request.UserRoleApps));
+                lstUserRoleApp.ForEach(x => x.UserId = entity.Id);
+
+                //Delete Titles old
+                var lstUserTitleOld = _userTitleDeptRepository.GetByUserId(id, false);
+                await _userTitleDeptRepository.DeleteManyAsync(lstUserTitleOld);
+
+                //Delete UserRoleApps old
+                var lstUserRoleAppOld = _userRoleAppRepository.GetByUserId(id, false);
+                await _userRoleAppRepository.DeleteManyAsync(lstUserRoleAppOld);
+
+                //Insert Title new
+                await _userTitleDeptRepository.InsertManyAsync(lstUserTitle);
+                //Insert UserRoleApps new
+                await _userRoleAppRepository.InsertManyAsync(lstUserRoleApp);
+
                 await _repository.UpdateAsync(entity);
                 return result;
             }
@@ -279,8 +308,8 @@ namespace Greenglobal.Core.Services
 
                 if (request.DepartmentId.HasValue)
                 {
-                    var lstUserRoleDepts = _userRoleDeptRepository.GetByDepartmentId(request.DepartmentId.Value);
-                    query = query.Where(x => lstUserRoleDepts.Contains(x.Id));
+                    var lstUserTitleDepts = _userTitleDeptRepository.GetByDepartmentId(request.DepartmentId.Value);
+                    query = query.Where(x => lstUserTitleDepts.Contains(x.Id));
                 }
 
                 if (!string.IsNullOrEmpty(request.FullName))
@@ -316,18 +345,21 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
                 result.Data = ObjectMapper.Map<User, UserResponse>(entity);
-                var lstUserRoleDepts = ObjectMapper.Map<List<UserTitleDept>, List<UserTitleDeptResponse>>
-                    (await AsyncExecuter.ToListAsync(_userRoleDeptRepository.GetByUserId(id)));
-                if (lstUserRoleDepts.Any())
+                var lstUserTitleDepts = ObjectMapper.Map<List<UserTitleDept>, List<UserTitleDeptResponse>>
+                    (await AsyncExecuter.ToListAsync(_userTitleDeptRepository.GetByUserId(id)));
+                if (lstUserTitleDepts.Any())
                 {
-                    var userRoleMain = lstUserRoleDepts.FirstOrDefault(x => x.IsMain);
-                    if (userRoleMain != null)
+                    var userTitleMain = lstUserTitleDepts.FirstOrDefault(x => x.IsMain);
+                    if (userTitleMain != null)
                     {
-                        result.Data.Title = userRoleMain.Title;
-                        result.Data.Department = userRoleMain.Department;
+                        result.Data.Title = userTitleMain.Title;
+                        result.Data.Department = userTitleMain.Department;
                     }
-                    result.Data.UserRoleDepts = lstUserRoleDepts.Where(x => !x.IsMain).ToList();
+                    result.Data.Concurrent = lstUserTitleDepts.Where(x => !x.IsMain).ToList();
                 }
+                var lstUserRoleApp = await AsyncExecuter.ToListAsync(_userRoleAppRepository.GetByUserId(id));
+                if (lstUserRoleApp != null && lstUserRoleApp.Any())
+                    result.Data.UserRoleApps = ObjectMapper.Map<List<UserRoleApp>, List<UserRoleAppResponse>>(lstUserRoleApp);
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
             }

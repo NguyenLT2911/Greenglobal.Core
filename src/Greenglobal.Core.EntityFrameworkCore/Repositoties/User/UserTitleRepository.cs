@@ -2,16 +2,15 @@
 using Greenglobal.Core.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Greenglobal.Core.Repositories
 {
-    public class UserRoleDeptRepository : EfCoreRepository<CoreDbContext, UserTitleDept, Guid>, IUserRoleDeptRepository
+    public class UserTitleRepository : EfCoreRepository<CoreDbContext, UserTitleDept, Guid>, IUserTitleRepository
     {
-        public UserRoleDeptRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
+        public UserTitleRepository(IDbContextProvider<CoreDbContext> dbContextProvider) : base(dbContextProvider) { }
 
         public IQueryable<UserTitleDept> GetByUserId(Guid userId, bool haveIncludeMany)
         {
@@ -27,7 +26,7 @@ namespace Greenglobal.Core.Repositories
 
         public IQueryable<Guid> GetByDepartmentId(Guid departmentId)
         {
-            return GetDbSetAsync().Result.Where(x => x.DepartmentId == departmentId).AsNoTracking().Select(x => x.UserId);
+            return GetDbSetAsync().Result.Where(x => x.DepartmentId == departmentId && x.IsMain).AsNoTracking().Select(x => x.UserId);
         }
     }
 }

@@ -6,6 +6,9 @@ namespace Greenglobal.Core.Models
     {
         public string Name { get; set; }
 
+        [JsonPropertyName("short_name")]
+        public string ShortName { get; set; }
+
         public string Code { get; set; }
 
         [JsonPropertyName("icon_path")]

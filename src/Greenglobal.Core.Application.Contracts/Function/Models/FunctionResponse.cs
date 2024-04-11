@@ -29,9 +29,11 @@ namespace Greenglobal.Core.Models
 
         [JsonPropertyName("application_id")]
         public Guid ApplicationId { get; set; }
+        
+        public FunctionResponse? Parent { get; set; }
 
         public List<FunctionResponse>? Children { get; set; }
 
-        //public List<PermissionResponse>? Permissions { get; set; }
+        public List<PermissionResponse>? Permissions { get; set; }
     }
 }

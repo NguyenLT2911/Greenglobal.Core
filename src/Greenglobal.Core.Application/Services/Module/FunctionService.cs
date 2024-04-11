@@ -1,5 +1,4 @@
-﻿using AutoMapper.Configuration.Conventions;
-using Greenglobal.Core.Constants;
+﻿using Greenglobal.Core.Constants;
 using Greenglobal.Core.Entities;
 using Greenglobal.Core.Models;
 using Greenglobal.Core.Repositories;
@@ -150,7 +149,7 @@ namespace Greenglobal.Core.Services
                 }
 
                 base.MapToEntity(request, entity);
-                await _repository.InsertAsync(entity);
+                await _repository.UpdateAsync(entity);
                 return result;
             }
             catch (Exception e)
@@ -230,6 +229,13 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
                 result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
+                if (entity.ParentId.HasValue)
+                {
+                    var dataParent = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(entity.ParentId.Value));
+                    if (dataParent != null)
+                        result.Data.Parent = ObjectMapper.Map<Function, FunctionResponse>(dataParent);
+                }
+
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
             }
@@ -241,130 +247,63 @@ namespace Greenglobal.Core.Services
             }
         }
 
-        //public async Task<BaseResponse<FunctionResponse>> GetHavePermissionByIdAsync(Guid id)
-        //{
-        //    var result = new BaseResponse<FunctionResponse>();
-        //    try
-        //    {
-        //        var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
-        //        if (entity == null)
-        //        {
-        //            result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Chức năng");
-        //            return result;
-        //        }
-        //        result.Data = ObjectMapper.Map<Function, FunctionResponse>(entity);
-        //        result.Data.Children = await GetHierarchyHavePermission(id);
+        /// <summary>
+        /// Get data have children multi level by applicationId for response
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <returns></returns>
+        public async Task<List<FunctionResponse>> GetHierarchyByApplicationId(Guid applicationId)
+        {
+            var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByApplicationId(applicationId)));
+            if (result.Any())
+            {
+                foreach (var child in result)
+                {
+                    child.Children = await GetHierarchy(child.Id);
+                }
+            }
+            return result;
+        }
 
-        //        result.Message = ErrorMessages.GET.Getted;
-        //        return result;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        result.Message = ErrorMessages.GET.GetFail;
-        //        result.Status = 400;
-        //        return result;
-        //    }
-        //}
+        /// <summary>
+        /// Get data have children multi level have permission by applicationId for response
+        /// </summary>
+        /// <param name="ApplicationId"></param>
+        /// <returns></returns>
+        public async Task<List<FunctionResponse>> GetHierarchyHavePermissionByApplication(Guid applicationId)
+        {
+            var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByApplicationId(applicationId)));
+            if (result.Any())
+            {
+                var lstPermission = ObjectMapper.Map<List<Permission>, List<PermissionResponse>>
+                    (await AsyncExecuter.ToListAsync(_permissionRepository.GetByFunctionIds(result.Select(x => x.Id).ToList())));
+                foreach (var child in result)
+                {
+                    if (lstPermission != null && lstPermission.Any())
+                        child.Permissions = lstPermission.Where(per => per.FunctionId == child.Id).ToList();
+                    child.Children = await GetHierarchyHavePermissionByApplication(child.Id);
+                }
+            }
+            return result;
+        }
 
-        ///// <summary>
-        ///// Get data have children multi level for response
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //private async Task<List<FunctionResponse>> GetHierarchy(Guid id)
-        //{
-        //    var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
-        //    if (result.Any())
-        //    {
-        //        foreach (var child in result)
-        //        {
-        //            child.Children = await GetHierarchy(child.Id);
-        //        }
-        //    }
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Get data have children multi level for entity to insert or update
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //private List<Function> GetDataMultiLevel(FunctionRequest request, Function entity)
-        //{
-        //    var lstFunction = new List<Function>();
-        //    EntityHelper.TrySetId(entity, GuidGenerator.Create);
-        //    lstFunction.Add(entity);
-
-        //    if (request.Children != null && request.Children.Any())
-        //    {
-        //        int indexA = 0;
-        //        foreach (var childA in request.Children)
-        //        {
-        //            var childAEntity = ObjectMapper.Map<FunctionRequest, Function>(childA);
-
-        //            indexA++;
-        //            EntityHelper.TrySetId(childAEntity, GuidGenerator.Create);
-        //            childAEntity.ParentId = entity.Id;
-        //            childAEntity.SortOrder = indexA;
-        //            lstFunction.Add(childAEntity);
-        //            if (childA.Children != null && childA.Children.Any())
-        //            {
-        //                int indexB = 0;
-        //                foreach (var childB in childA.Children)
-        //                {
-        //                    var childBEntity = ObjectMapper.Map<FunctionRequest, Function>(childB);
-
-        //                    indexB++;
-        //                    EntityHelper.TrySetId(childBEntity, GuidGenerator.Create);
-        //                    childBEntity.ParentId = childAEntity.Id;
-        //                    childBEntity.IsModule = false;
-        //                    childBEntity.SortOrder = indexB;
-        //                    lstFunction.Add(childBEntity);
-        //                    if (childB.Children != null && childB.Children.Any())
-        //                    {
-        //                        int indexC = 0;
-        //                        foreach (var childC in childB.Children)
-        //                        {
-        //                            var childCEntity = ObjectMapper.Map<FunctionRequest, Function>(childC);
-
-        //                            indexC++;
-        //                            EntityHelper.TrySetId(childCEntity, GuidGenerator.Create);
-        //                            childCEntity.ParentId = childBEntity.Id;
-        //                            childCEntity.IsModule = false;
-        //                            childCEntity.SortOrder = indexC;
-        //                            lstFunction.Add(childCEntity);
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return lstFunction;
-        //}
-
-        ///// <summary>
-        ///// Get data have children multi level have permission for response
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <param name="entity"></param>
-        ///// <returns></returns>
-        //private async Task<List<FunctionResponse>> GetHierarchyHavePermission(Guid id)
-        //{
-        //    var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
-        //    if (result.Any())
-        //    {
-        //        var lstPermission = ObjectMapper.Map<List<Permission>, List<PermissionResponse>>
-        //            (await AsyncExecuter.ToListAsync(_permissionRepository.GetByFunctionIds(result.Select(x => x.Id).ToList())));
-        //        foreach (var child in result)
-        //        {
-        //            if (lstPermission != null && lstPermission.Any())
-        //                child.Permissions = lstPermission.Where(per => per.FunctionId == child.Id).ToList();
-        //            child.Children = await GetHierarchyHavePermission(child.Id);
-        //        }
-        //    }
-        //    return result;
-        //}
+        /// <summary>
+        /// Get data have children multi level for response
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private async Task<List<FunctionResponse>> GetHierarchy(Guid id)
+        {
+            var result = ObjectMapper.Map<List<Function>, List<FunctionResponse>>(await AsyncExecuter.ToListAsync(_repository.GetByParentId(id)));
+            if (result.Any())
+            {
+                foreach (var child in result)
+                {
+                    child.Children = await GetHierarchy(child.Id);
+                }
+            }
+            return result;
+        }
     }
 }

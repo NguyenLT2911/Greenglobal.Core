@@ -26,10 +26,13 @@ namespace Greenglobal.Core.Services
         IApplicationService
     {
         private readonly IApplicationRepository _repository;
+        private readonly IFunctionService _functionService;
 
-        public ApplicationService(IApplicationRepository repository) : base(repository)
+        public ApplicationService(IApplicationRepository repository,
+            IFunctionService functionService) : base(repository)
         {
             _repository = repository;
+            _functionService = functionService;
         }
 
         public async Task<BaseResponse<bool>> CreateApplicationAsync(ApplicationRequest request)
@@ -213,6 +216,32 @@ namespace Greenglobal.Core.Services
                     return result;
                 }
                 result.Data = ObjectMapper.Map<Application, ApplicationResponse>(entity);
+                result.Data.Functions = await _functionService.GetHierarchyByApplicationId(id);
+                result.Message = ErrorMessages.GET.Getted;
+                return result;
+            }
+            catch (Exception)
+            {
+                result.Message = ErrorMessages.GET.GetFail;
+                result.Status = 400;
+                return result;
+            }
+        }
+
+        public async Task<BaseResponse<ApplicationResponse>> GetHavePermissionByIdAsync(Guid id)
+        {
+            var result = new BaseResponse<ApplicationResponse>();
+            try
+            {
+                var entity = await AsyncExecuter.FirstOrDefaultAsync(_repository.GetById(id));
+                if (entity == null)
+                {
+                    result.Message = string.Format(ErrorMessages.VALID.NotExisted, "Ứng dụng");
+                    return result;
+                }
+                result.Data = ObjectMapper.Map<Application, ApplicationResponse>(entity);
+                result.Data.Functions = await _functionService.GetHierarchyHavePermissionByApplication(id);
+
                 result.Message = ErrorMessages.GET.Getted;
                 return result;
             }

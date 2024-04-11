@@ -18,6 +18,9 @@ public class CoreApplicationAutoMapperProfile : Profile
         CreateMap<Function, FunctionResponse>().IgnoreAllNonExisting();
         CreateMap<FunctionRequest, Function>().IgnoreAllNonExisting();
 
+        CreateMap<Application, ApplicationResponse>().IgnoreAllNonExisting();
+        CreateMap<ApplicationRequest, Application>().IgnoreAllNonExisting();
+
         CreateMap<User, UserResponse>().IgnoreAllNonExisting();
         CreateMap<UserRequest, User>(MemberList.Source).IgnoreAllNonExisting();
 
@@ -32,5 +35,8 @@ public class CoreApplicationAutoMapperProfile : Profile
 
         CreateMap<UserTitleDept, UserTitleDeptResponse>().IgnoreAllNonExisting();
         CreateMap<UserTitleDeptRequest, UserTitleDept>(MemberList.Source).IgnoreAllNonExisting();
+
+        CreateMap<UserRoleApp, UserRoleAppResponse>().IgnoreAllNonExisting();
+        CreateMap<UserRoleAppRequest, UserRoleApp>(MemberList.Source).IgnoreAllNonExisting();
     }
 }
